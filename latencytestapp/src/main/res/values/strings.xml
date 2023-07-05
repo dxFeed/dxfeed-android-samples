@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">dxLatencyTest</string>
+    <string name="address_hint">address text field</string>
+    <string name="address">mddqa.in.devexperts.com:7400</string>
+    <string name="connect_button">Connect</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="disconnect_button">Disconnect</string>
+    <string name="connected_state">Disconnect</string>
+
+    <string name="state_connecting">Connecting \uD83D\uDFE0</string>
+    <string name="state_connected">Connected \uD83D\uDFE2</string>
+    <string name="state_closed">Closed \uD83D\uDD34</string>
+    <string name="state_other">Not connected \uD83D\uDD34</string>
+
+</resources>

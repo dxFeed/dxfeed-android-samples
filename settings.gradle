@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven {
+            url 'https://dxfeed.jfrog.io/artifactory/maven'
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "DXFeedSimpleAndroidApps"
+include ':quotetableapp'
+include ':latencytestapp'
+include ':perftestapp'
