@@ -25,7 +25,7 @@ Find useful information in our self-service dxFeed Knowledge Base:
 
 ## Usage
 ### How to connect to QD endpoint
-```java
+```kotlin
 // For token-based authorization, use the following address format:
 // "demo.dxfeed.com:7300[login=entitle:token]"
 val endpoint = DXEndpoint.newBuilder().build()
@@ -59,7 +59,7 @@ Quote{AAPL, eventTime=0, time=20231130-123206.000, timeNanoPart=0, sequence=0, b
 </details>
 
 ### How to connect to dxLink
-```java
+```kotlin
 // The experimental property must be enabled.
 System.setProperty("dxfeed.experimental.dxlink.enable", "true")
 // Set scheme for dxLink.
