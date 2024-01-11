@@ -1,4 +1,4 @@
-This repo provides sample of using [dxFeed Java API](https://docs.dxfeed.com/dxfeed/api/overview-summary.html).
+This repo provides samples of using [dxFeed Java API](https://docs.dxfeed.com/dxfeed/api/overview-summary.html).
 
 ## Table of Contents
 
