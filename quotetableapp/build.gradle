@@ -40,6 +40,9 @@ dependencies {
     implementation ('com.devexperts.qd:qds:3.320') {
         exclude module:"qds-monitoring"
     }
+    implementation ('com.devexperts.mdd:auther-api:476') {
+        exclude module:"qds-monitoring"
+    }
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
