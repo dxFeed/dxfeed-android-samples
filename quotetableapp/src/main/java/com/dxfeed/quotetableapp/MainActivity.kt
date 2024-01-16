@@ -37,7 +37,10 @@ class MainActivity : AppCompatActivity() {
     ) as List<Class<out MarketEvent>>
 
     private val adapter = QuoteAdapter(symbols, this)
-    private val service = QDService()
+    private val useWebSocket = false
+    private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
+
+    private val service = QDService(address = address, isWebSocket = useWebSocket)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -46,8 +49,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-        service.connect("demo.dxfeed.com:7300",
-            symbols = symbols,
+        service.connect(symbols = symbols,
             eventTypes = eventTypes,
             connectionHandler = {
                 Handler(Looper.getMainLooper()).post {

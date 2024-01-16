@@ -6,16 +6,20 @@ import com.dxfeed.event.market.MarketEvent
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class QDService() {
+class QDService(private val address: String, private val isWebSocket: Boolean) {
     private val executorService: ExecutorService = Executors.newFixedThreadPool(1)
 
-    fun connect(address: String,
-                symbols: List<String>,
+    fun connect(symbols: List<String>,
                 eventTypes: List<Class<out MarketEvent>>,
                 connectionHandler: (DXEndpoint.State) -> Unit,
                 eventsHandler: (List<MarketEvent>) -> Unit){
         System.setProperty("com.devexperts.connector.proto.heartbeatTimeout", "10s")
-
+        if (isWebSocket) {
+            // The experimental property must be enabled.
+            System.setProperty("dxfeed.experimental.dxlink.enable", "true")
+            // Set scheme for dxLink.
+            System.setProperty("scheme", "ext:resource:dxlink.xml")
+        }
         executorService.execute {
             val endpoint = DXEndpoint
                 .newBuilder()
