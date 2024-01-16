@@ -14,6 +14,9 @@ class QDService() {
                 eventTypes: List<Class<out MarketEvent>>,
                 connectionHandler: (DXEndpoint.State) -> Unit,
                 eventsHandler: (List<MarketEvent>) -> Unit){
+        System.setProperty("dxfeed.experimental.dxlink.enable", "true")
+//        System.setProperty("scheme", "ext:resource:dxlink.xml")
+
         System.setProperty("com.devexperts.connector.proto.heartbeatTimeout", "10s")
 
         executorService.execute {

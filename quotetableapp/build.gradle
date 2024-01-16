@@ -30,17 +30,52 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    packagingOptions {
+        exclude("META-INF/*")
+    }
 }
 
+//configurations.all {
+//    resolutionStrategy {
+//        force 'netty-codec-http:4.1.101.Final'
+//    }
+//}
+
 dependencies {
+//    constraints {
+//        implementation("netty-codec-http:4.1.101.Final!!")
+//    }
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation ('com.devexperts.qd:qds:3.320') {
+//    implementation 'netty-codec-http:4.1.101.Final'
+
+//    implementation ('com.devexperts.qd:dxlink-websocket:3.327') {
+//    }
+    implementation files('lib/dxlink-websocket.jar')
+    implementation files('lib/netty-codec-http.jar')
+    implementation files('lib/netty-common.jar')
+    implementation files('lib/netty-buffer.jar')
+    implementation files('lib/netty-transport.jar')
+    implementation files('lib/netty-resolver.jar')
+    implementation files('lib/netty-codec.jar')
+    implementation files('lib/netty-handler.jar')
+    implementation files('lib/netty-transport-native-unix-common.jar')
+    implementation files('lib/jackson-core.jar')
+    implementation files('lib/reflections.jar')
+    implementation files('lib/jaxb-api.jar')
+    implementation files('lib/openbeans.jar')
+
+    implementation ('com.devexperts.qd:qds:3.327') {
         exclude module:"qds-monitoring"
     }
+
+    implementation ('com.jcraft:jzlib:1.1.3')
+
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
+
