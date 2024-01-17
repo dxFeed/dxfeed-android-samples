@@ -13,7 +13,6 @@ class QDService(private val address: String, private val isWebSocket: Boolean) {
                 eventTypes: List<Class<out MarketEvent>>,
                 connectionHandler: (DXEndpoint.State) -> Unit,
                 eventsHandler: (List<MarketEvent>) -> Unit){
-        System.setProperty("com.devexperts.connector.proto.heartbeatTimeout", "10s")
         if (isWebSocket) {
             // The experimental property must be enabled.
             System.setProperty("dxfeed.experimental.dxlink.enable", "true")
