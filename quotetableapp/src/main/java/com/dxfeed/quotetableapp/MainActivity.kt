@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     ) as List<Class<out MarketEvent>>
 
     private val adapter = QuoteAdapter(symbols, this)
-    private val useWebSocket = false
+    private val useWebSocket = true
     private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
 
     private val service = QDService(address = address, isWebSocket = useWebSocket)

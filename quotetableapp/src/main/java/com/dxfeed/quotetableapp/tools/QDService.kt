@@ -16,8 +16,6 @@ class QDService(private val address: String, private val isWebSocket: Boolean) {
         if (isWebSocket) {
             // The experimental property must be enabled.
             System.setProperty("dxfeed.experimental.dxlink.enable", "true")
-            // Set scheme for dxLink.
-            System.setProperty("scheme", "ext:resource:dxlink.xml")
         }
         executorService.execute {
             val endpoint = DXEndpoint

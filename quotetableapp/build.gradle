@@ -30,15 +30,21 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    //fix error 7 files found with path 'META-INF/INDEX.LIST'.
+    packagingOptions {
+        exclude("META-INF/*")
+    }
 }
 
 dependencies {
+    // fix java.lang.NoClassDefFoundError: Failed resolution of: Lcom/jcraft/jzlib/Inflater;
+    implementation ('com.jcraft:jzlib:1.1.3')
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation ('com.devexperts.qd:qds:3.320') {
-        exclude module:"qds-monitoring"
+
+    implementation ('com.devexperts.qd:dxlink-websocket:3.328') {
     }
     implementation ('com.devexperts.mdd:auther-api:476') {
         exclude module:"qds-monitoring"
