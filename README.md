@@ -3,6 +3,7 @@ This repo provides samples of using [dxFeed Java API](https://docs.dxfeed.com/dx
 ## Table of Contents
 
 - [Documentation](#documentation)
+- [Installation](#installation)
 - [Usage](#usage)
     * [How to connect to QD endpoint](#how-to-connect-to-QD-endpoint)
     * [How to connect to dxLink](#how-to-connect-to-dxlink)
@@ -23,6 +24,21 @@ Find useful information in our self-service dxFeed Knowledge Base:
     * [Order Book reconstruction](https://kb.dxfeed.com/en/data-model/dxfeed-order-book/order-book-reconstruction.html)
     * [Symbology Guide](https://kb.dxfeed.com/en/data-model/symbology-guide.html)
 
+## Installation
+Adding Gradle Dependency   
+1. add information about the new repository in settings.gradle in the dependencyResolutionManagement section
+```
+maven {
+    url 'https://dxfeed.jfrog.io/artifactory/maven-open'
+}
+```
+2. add information about the required dependencies to the dependencies section of build.gradle
+```
+implementation ('com.devexperts.qd:dxlink-websocket:3.328') {}
+implementation ('com.devexperts.mdd:auther-api:476') {
+    exclude module:"qds-monitoring"
+}
+```
 ## Usage
 ### How to connect to QD endpoint
 ```kotlin
