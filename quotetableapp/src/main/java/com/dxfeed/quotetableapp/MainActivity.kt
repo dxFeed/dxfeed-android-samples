@@ -1,8 +1,10 @@
 package com.dxfeed.quotetableapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,42 +14,47 @@ import com.dxfeed.event.market.MarketEvent
 import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.adapters.QuoteAdapter
+import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
 import com.dxfeed.quotetableapp.extensions.stringValue
 import com.dxfeed.quotetableapp.tools.QDService
 
 
+
+
 class MainActivity : AppCompatActivity() {
-    private val symbols = listOf(
-    "AAPL",
-    "IBM",
-    "MSFT",
-    "EUR/CAD",
-    "ETH/USD:GDAX",
-    "GOOG",
-    "BAC",
-    "CSCO",
-    "ABCE",
-    "INTC",
-    "PFE"
-    )
+    private val symbolsDataProvider = SymbolsDataProvider(QuoteApp.context!!)
 
     private val eventTypes = listOf(
         Quote::class.java,
         Profile::class.java
     ) as List<Class<out MarketEvent>>
 
-    private val adapter = QuoteAdapter(symbols, this)
     private val useWebSocket = true
     private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
 
     private val service = QDService(address = address, isWebSocket = useWebSocket)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = QuoteAdapter(symbolsDataProvider.selectedSymbols.toList(), this)
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        val buttonClick = findViewById<ImageButton>(R.id.editButton)
+        buttonClick.setOnClickListener {
+            val intent = Intent(this, EditSymbolsActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val symbols = symbolsDataProvider.selectedSymbols.toList()
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
+        val adapter = QuoteAdapter(symbols, this)
+        recyclerView.adapter = adapter
 
         service.connect(symbols = symbols,
             eventTypes = eventTypes,
