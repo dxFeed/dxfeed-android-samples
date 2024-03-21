@@ -75,6 +75,7 @@ class SymbolsDataProvider(val context: Context): ISaveSymbols, ViewModel() {
         }
         set(value) {
             val newValue = value.toList()
+            println("Set symbols $newValue ${_data.value}")
             if (_data.value == newValue) {
                 return
             }

@@ -50,14 +50,15 @@ class MyAdapter(private var dataList: List<InstrumentInfo>,
         fun bind(item: InstrumentInfo) {
             textView.text = item.symbol + "\n" + item.description
             checkBox.isChecked = selectedItems.contains(item.symbol)
-
-            itemView.setOnClickListener {
-                if (checkBox.isChecked) {
-                    selectedItems.remove(item.symbol)
-                } else {
+            checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
                     selectedItems.add(item.symbol)
+                } else {
+                    selectedItems.remove(item.symbol)
                 }
                 storage.save(selectedItems.toList())
+            }
+            itemView.setOnClickListener {
                 checkBox.isChecked = !checkBox.isChecked
             }
         }
