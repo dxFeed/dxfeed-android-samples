@@ -2,21 +2,32 @@ package com.dxfeed.quotetableapp.adapters
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 
 
-data class InstrumentInfo(val symbol: String, val description: String) {
+data class InstrumentInfo(val symbol: String, val description: String)
 
+interface ISaveSymbols {
+    fun save(symbols: List<String>)
 }
+class SymbolsDataProvider(val context: Context): ISaveSymbols, ViewModel() {
+    private val kSelectedSymbolsKey = "kSelectedSymbolsKey"
+    private val kSymbolsKey = "kSymbolsKey"
+    private val arrayInfoClass = Array<InstrumentInfo>::class.java
+    private val arrayStringClass = Array<String>::class.java
 
-class SymbolsDataProvider(val context: Context) {
-    val kSelectedSymbolsKey = "kSelectedSymbolsKey"
-    val kSymbolsKey = "kSymbolsKey"
-    val arrayInfoClass = Array<InstrumentInfo>::class.java
-    val arrayStringClass = Array<String>::class.java
+    private val _data: MutableLiveData<List<String>>
+    val data: LiveData<List<String>>
 
     val gson = Gson()
 
+    init {
+        _data = MutableLiveData<List<String>>(selectedSymbols.toList())
+        data = _data
+    }
     var allSymbols: Array<InstrumentInfo>
         get() {
             var preferences: SharedPreferences =
@@ -24,6 +35,9 @@ class SymbolsDataProvider(val context: Context) {
             val editor = preferences.edit()
 
             val allSymbols = preferences.getString(kSymbolsKey, null)
+            if (allSymbols == null) {
+                return arrayOf()
+            }
             val symbols = gson.fromJson(
                 allSymbols,
                 arrayInfoClass
@@ -60,6 +74,12 @@ class SymbolsDataProvider(val context: Context) {
             return symbols
         }
         set(value) {
+            val newValue = value.toList()
+            if (_data.value == newValue) {
+                return
+            }
+            _data.value = newValue
+
             var preferences: SharedPreferences =
                 context.getSharedPreferences("SymbolsDataProviderPreferences", Context.MODE_PRIVATE)
             val editor = preferences.edit()
@@ -67,4 +87,8 @@ class SymbolsDataProvider(val context: Context) {
             editor.putString(kSelectedSymbolsKey, string)
             editor.apply();
         }
+
+    override fun save(symbols: List<String>) {
+        selectedSymbols = symbols.toTypedArray()
+    }
 }

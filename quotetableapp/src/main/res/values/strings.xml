@@ -5,6 +5,7 @@
     <string name="edit_string">Edit</string>
     <string name="quotes_title">Quotes</string>
     <string name="symbols_title">Symbols</string>
+    <string name="add_symbols_title">Add symbols</string>
 
     <string name="state_connecting">Connecting \uD83D\uDFE0</string>
     <string name="state_connected">Connected \uD83D\uDFE2</string>

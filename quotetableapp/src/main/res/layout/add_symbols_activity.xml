@@ -4,35 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditSymbolsActivity">
-
+    tools:context=".AddSymbolsActivity">
     <TextView
+        android:id="@+id/add_symbols_title"
+
         android:layout_width="wrap_content"
         android:textColor="@color/white"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/symbols_title"
+        android:text="@string/add_symbols_title"
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/transparent"
-        android:text="@string/edit_string"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/edit_recycler_view"
+        android:id="@+id/add_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
 
@@ -40,6 +28,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_button" />
-
+        app:layout_constraintTop_toBottomOf="@+id/add_symbols_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

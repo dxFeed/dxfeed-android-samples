@@ -1,23 +1,31 @@
 package com.dxfeed.quotetableapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dxfeed.quotetableapp.adapters.InstrumentInfo
 import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
+import com.dxfeed.quotetableapp.tools.QDIpfService
+import com.dxfeed.quotetableapp.tools.QDQuoteService
 
-class EditSymbolsAdapter() : RecyclerView.Adapter<EditSymbolsAdapter.ViewHolder>() {
-    private val symbolsDataProvider = SymbolsDataProvider(QuoteApp.context!!)
+class EditSymbolsAdapter(val symbolsDataProvider: SymbolsDataProvider) : RecyclerView.Adapter<EditSymbolsAdapter.ViewHolder>() {
 
-    private val items: MutableList<String> = symbolsDataProvider.selectedSymbols.toMutableList()
+    private var items: MutableList<String> = symbolsDataProvider.selectedSymbols.toMutableList()
 
     fun getSymbols(): Array<String> = items.toTypedArray()
+    fun updateData(dataList: List<String>) {
+        items = dataList.toMutableList()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
@@ -64,15 +72,20 @@ class EditSymbolsActivity: AppCompatActivity() {
     private lateinit var adapter: EditSymbolsAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
+    private val symbolsDataProvider = QuoteApp.dataProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.edit_quotes_activity)
-
+        val buttonClick = findViewById<Button>(R.id.add_button)
+        buttonClick.setOnClickListener {
+            val intent = Intent(this, AddSymbolsActivity::class.java)
+            startActivity(intent)
+        }
         recyclerView = findViewById(R.id.edit_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = EditSymbolsAdapter()
+        adapter = EditSymbolsAdapter(symbolsDataProvider)
 
         recyclerView.adapter = adapter
 
@@ -99,6 +112,10 @@ class EditSymbolsActivity: AppCompatActivity() {
 
         itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+        symbolsDataProvider.data.observe(this) {
+            adapter.updateData(it)
+        }
     }
+
 
 }
