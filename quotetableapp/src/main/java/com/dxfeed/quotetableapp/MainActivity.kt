@@ -21,16 +21,15 @@ import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
 import com.dxfeed.quotetableapp.extensions.stringValue
 import com.dxfeed.quotetableapp.tools.QDQuoteService
 
-
 class MainActivity : AppCompatActivity() {
-    private val symbolsDataProvider = QuoteApp.dataProvider
+    private val symbolsDataProvider = SymbolsDataProvider.getInstance()
     private var symbols = listOf<String>()
     private val eventTypes = listOf(
         Quote::class.java,
         Profile::class.java
     ) as List<Class<out MarketEvent>>
 
-    private val useWebSocket = true
+    private val useWebSocket = false
     private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
 
     private val service = QDQuoteService(address = address, isWebSocket = useWebSocket)

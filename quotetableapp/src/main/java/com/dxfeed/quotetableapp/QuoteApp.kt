@@ -8,14 +8,10 @@ class QuoteApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        dataProvider = SymbolsDataProvider(applicationContext)
     }
 
     companion object {
         var context: Context? = null
-            private set
-
-        lateinit var dataProvider: SymbolsDataProvider
             private set
     }
 }
