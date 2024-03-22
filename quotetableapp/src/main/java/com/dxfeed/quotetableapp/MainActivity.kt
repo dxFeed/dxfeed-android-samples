@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = QuoteAdapter(listOf(), this)
+        recyclerView.adapter = QuoteAdapter(listOf())
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         val buttonClick = findViewById<ImageButton>(R.id.editButton)
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             symbols = it
 
             val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
-            val adapter = QuoteAdapter(symbols, this)
+            val adapter = QuoteAdapter(symbols)
             recyclerView.adapter = adapter
 
             service.connect(symbols = symbols,

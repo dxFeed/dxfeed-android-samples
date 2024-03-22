@@ -11,12 +11,7 @@ import com.google.gson.Gson
 
 data class InstrumentInfo(val symbol: String, val description: String)
 
-interface ISaveSymbols {
-    fun save(symbols: List<String>)
-}
-
-
-class SymbolsDataProvider: ISaveSymbols, ViewModel() {
+class SymbolsDataProvider: ViewModel() {
     private val kSelectedSymbolsKey = "kSelectedSymbolsKey"
     private val kSymbolsKey = "kSymbolsKey"
     private val kPreferencesName = "SymbolsDataProviderPreferences"
@@ -115,8 +110,4 @@ class SymbolsDataProvider: ISaveSymbols, ViewModel() {
             editor.putString(kSelectedSymbolsKey, string)
             editor.apply();
         }
-
-    override fun save(symbols: List<String>) {
-        selectedSymbols = symbols.toTypedArray()
-    }
 }

@@ -60,10 +60,8 @@ class EditSymbolsActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         symbolsDataProvider.selectedSymbols = adapter.items.toTypedArray()
     }
-
-
 }

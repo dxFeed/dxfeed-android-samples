@@ -26,8 +26,8 @@ class AddSymbolsActivity: AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = AddSymbolsAdapter(
             symbolsDataProvider.allSymbols.toList(),
-            symbolsDataProvider.selectedSymbols.toMutableSet(),
-            symbolsDataProvider
+            symbolsDataProvider.selectedSymbols.toList(),
+
         )
         recyclerView.adapter = adapter
         service.connect { loaded ->
@@ -40,5 +40,10 @@ class AddSymbolsActivity: AppCompatActivity() {
                 adapter.updateData(dataList)
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        symbolsDataProvider.selectedSymbols = adapter.items.toTypedArray()
     }
 }

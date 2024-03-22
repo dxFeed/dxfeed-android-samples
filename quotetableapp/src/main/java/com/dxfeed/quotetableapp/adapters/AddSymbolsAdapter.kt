@@ -9,9 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dxfeed.quotetableapp.R
 
 class AddSymbolsAdapter(private var dataList: List<InstrumentInfo>,
-                        private val selectedItems: MutableSet<String>,
-                        private val storage: ISaveSymbols) :
+                        selectedItems: List<String>) :
     RecyclerView.Adapter<AddSymbolsAdapter.MyViewHolder>() {
+
+    private val selectedItems: MutableSet<String> = selectedItems.toMutableSet()
+    val items: List<String>
+        get() {
+            return selectedItems.toList()
+        }
 
     fun updateData(dataList: List<InstrumentInfo>) {
         if (this.dataList != dataList) {
@@ -48,7 +53,6 @@ class AddSymbolsAdapter(private var dataList: List<InstrumentInfo>,
                 } else {
                     selectedItems.remove(item.symbol)
                 }
-                storage.save(selectedItems.toList())
             }
             checkBox.isChecked = selectedItems.contains(item.symbol)
 

@@ -1,6 +1,5 @@
 package com.dxfeed.quotetableapp.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.R
 
-class QuoteAdapter(mList: List<String>, context: Context) : RecyclerView.Adapter<QuoteAdapter.ViewHolder>() {
+class QuoteAdapter(mList: List<String>) : RecyclerView.Adapter<QuoteAdapter.ViewHolder>() {
     private val dataSource = LinkedHashMap(mList.associateWith {
         QuoteModel(it)
     })
