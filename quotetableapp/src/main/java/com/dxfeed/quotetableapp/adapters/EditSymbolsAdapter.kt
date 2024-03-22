@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dxfeed.quotetableapp.R
 
-class EditSymbolsAdapter(val symbolsDataProvider: SymbolsDataProvider) : RecyclerView.Adapter<EditSymbolsAdapter.ViewHolder>() {
-
-    private var items: MutableList<String> = symbolsDataProvider.selectedSymbols.toMutableList()
+class EditSymbolsAdapter(symbols: List<String>) : RecyclerView.Adapter<EditSymbolsAdapter.ViewHolder>() {
+    var items: MutableList<String> = symbols.toMutableList()
+        private set
 
     fun updateData(dataList: List<String>) {
         items = dataList.toMutableList()
@@ -33,7 +33,6 @@ class EditSymbolsAdapter(val symbolsDataProvider: SymbolsDataProvider) : Recycle
     fun removeItem(position: Int) {
         items.removeAt(position)
         notifyItemRemoved(position)
-        symbolsDataProvider.selectedSymbols = items.toTypedArray()
     }
 
     fun swapItems(fromPosition: Int, toPosition: Int) {
@@ -41,7 +40,6 @@ class EditSymbolsAdapter(val symbolsDataProvider: SymbolsDataProvider) : Recycle
         items[fromPosition] = items[toPosition]
         items[toPosition] = temp
         notifyItemMoved(fromPosition, toPosition)
-        symbolsDataProvider.selectedSymbols = items.toTypedArray()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

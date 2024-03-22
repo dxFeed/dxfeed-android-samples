@@ -28,7 +28,7 @@ class EditSymbolsActivity : AppCompatActivity() {
         }
         recyclerView = findViewById(R.id.edit_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = EditSymbolsAdapter(symbolsDataProvider)
+        adapter = EditSymbolsAdapter(symbolsDataProvider.selectedSymbols.toList())
 
         recyclerView.adapter = adapter
 
@@ -58,6 +58,11 @@ class EditSymbolsActivity : AppCompatActivity() {
         symbolsDataProvider.data.observe(this) {
             adapter.updateData(it)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        symbolsDataProvider.selectedSymbols = adapter.items.toTypedArray()
     }
 
 
