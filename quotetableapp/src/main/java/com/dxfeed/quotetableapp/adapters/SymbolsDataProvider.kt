@@ -34,11 +34,9 @@ class SymbolsDataProvider: ISaveSymbols, ViewModel() {
     private var cachedSymbols = arrayOf<InstrumentInfo>()
     private var cachedSelectedSymbols = arrayOf<String>()
     companion object {
-
-        @Volatile private var instance: SymbolsDataProvider? = null // Volatile modifier is necessary
-
+        @Volatile private var instance: SymbolsDataProvider? = null
         fun getInstance() =
-            instance ?: synchronized(this) { // synchronized to avoid concurrency problem
+            instance ?: synchronized(this) {
                 instance ?: SymbolsDataProvider().also { instance = it }
             }
     }
@@ -64,7 +62,7 @@ class SymbolsDataProvider: ISaveSymbols, ViewModel() {
                     symbols.sortedBy { it.symbol }.toTypedArray()
                 }
             }
-
+            
             return cachedSymbols
         }
 
