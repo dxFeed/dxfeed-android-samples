@@ -7,7 +7,7 @@ import java.util.concurrent.Executors
 
 class QDQuoteService(private val address: String, private val isWebSocket: Boolean) {
     private val executorService: ExecutorService = Executors.newFixedThreadPool(1)
-
+    var endpoint: DXEndpoint? = null
     fun connect(symbols: List<String>,
                 eventTypes: List<Class<out MarketEvent>>,
                 connectionHandler: (DXEndpoint.State) -> Unit,
@@ -17,14 +17,17 @@ class QDQuoteService(private val address: String, private val isWebSocket: Boole
             System.setProperty("dxfeed.experimental.dxlink.enable", "true")
         }
         executorService.execute {
-            val endpoint = DXEndpoint
-                .newBuilder()
-                .withProperty("dxfeed.aggregationPeriod", "1")
-                .build()
-            endpoint.addStateChangeListener {
-                connectionHandler(it.newValue as DXEndpoint.State)
+            if (endpoint == null) {
+                val endpoint = DXEndpoint
+                    .newBuilder()
+                    .withProperty("dxfeed.aggregationPeriod", "1")
+                    .build()
+                endpoint.addStateChangeListener {
+                    connectionHandler(it.newValue as DXEndpoint.State)
+                }
+                endpoint.connect(address)
+                this.endpoint = endpoint
             }
-            endpoint.connect(address)
 
             eventTypes.forEach { eventType ->
                 val subscription = endpoint?.feed?.createSubscription(eventType)

@@ -11,7 +11,6 @@ import com.dxfeed.quotetableapp.adapters.AddSymbolsAdapter
 import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
 import com.dxfeed.quotetableapp.tools.QDIpfService
 
-
 class AddSymbolsActivity: AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AddSymbolsAdapter

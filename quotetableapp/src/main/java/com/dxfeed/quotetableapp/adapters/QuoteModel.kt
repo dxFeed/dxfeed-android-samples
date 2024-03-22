@@ -4,7 +4,7 @@ import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.extensions.format
 
-class QuoteModel(private val symbol: String) {
+class QuoteModel(val symbol: String) {
     private var quote: Quote? = null
     private var previousQuote: Quote? = null
     private var profileDesc: String = ""

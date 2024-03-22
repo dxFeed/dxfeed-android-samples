@@ -2,25 +2,15 @@ package com.dxfeed.quotetableapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dxfeed.quotetableapp.adapters.EditSymbolsAdapter
-import com.dxfeed.quotetableapp.adapters.InstrumentInfo
 import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
-import com.dxfeed.quotetableapp.tools.QDIpfService
-import com.dxfeed.quotetableapp.tools.QDQuoteService
 
-
-
-class EditSymbolsActivity: AppCompatActivity() {
+class EditSymbolsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: EditSymbolsAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper

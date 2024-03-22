@@ -16,7 +16,7 @@ interface ISaveSymbols {
 }
 
 
-class SymbolsDataProvider(): ISaveSymbols, ViewModel() {
+class SymbolsDataProvider: ISaveSymbols, ViewModel() {
     private val kSelectedSymbolsKey = "kSelectedSymbolsKey"
     private val kSymbolsKey = "kSymbolsKey"
     private val kPreferencesName = "SymbolsDataProviderPreferences"
@@ -54,14 +54,14 @@ class SymbolsDataProvider(): ISaveSymbols, ViewModel() {
                     context.getSharedPreferences(kPreferencesName, Context.MODE_PRIVATE)
 
                 val allSymbols = preferences.getString(kSymbolsKey, null)
-                if (allSymbols == null) {
-                    cachedSymbols = arrayOf()
+                cachedSymbols = if (allSymbols == null) {
+                    arrayOf()
                 } else {
                     val symbols = gson.fromJson(
                         allSymbols,
                         arrayInfoClass
                     )
-                    cachedSymbols = symbols.sortedBy { it.symbol }.toTypedArray()
+                    symbols.sortedBy { it.symbol }.toTypedArray()
                 }
             }
 
@@ -89,10 +89,10 @@ class SymbolsDataProvider(): ISaveSymbols, ViewModel() {
                     context.getSharedPreferences(kPreferencesName, Context.MODE_PRIVATE)
 
                 val allSymbolsStr = preferences.getString(kSelectedSymbolsKey, null)
-                if (allSymbolsStr == null) {
-                    cachedSelectedSymbols = arrayOf("AAPL", "IBM", "ETH/USD:GDAX")
+                cachedSelectedSymbols = if (allSymbolsStr == null) {
+                    arrayOf("AAPL", "IBM", "ETH/USD:GDAX")
                 } else {
-                    cachedSelectedSymbols = gson.fromJson(
+                    gson.fromJson(
                         allSymbolsStr,
                         arrayStringClass
                     )
