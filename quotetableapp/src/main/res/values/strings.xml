@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">dxFeedTest</string>
+    <string name="app_name">dxFeed Quotes</string>
     <string name="bid_hint">bid value</string>
     <string name="ask_hint">ask value</string>
     <string name="edit_string">Edit</string>
