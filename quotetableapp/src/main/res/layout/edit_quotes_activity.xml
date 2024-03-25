@@ -27,6 +27,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
+        android:textColor="@color/white"
         android:text="@string/edit_string"
 
         app:layout_constraintEnd_toEndOf="parent"
