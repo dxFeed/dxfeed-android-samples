@@ -15,12 +15,14 @@ class QuoteAdapter(mList: List<String>) : RecyclerView.Adapter<QuoteAdapter.View
         QuoteModel(it)
     })
 
-    fun update(quote: Quote) {
+    fun update(quote: Quote): Int{
         dataSource[quote.eventSymbol]?.update(quote)
+        return dataSource.keys.indexOf(quote.eventSymbol)
     }
 
-    fun update(profile: Profile) {
+    fun update(profile: Profile): Int {
         dataSource[profile.eventSymbol]?.update(profile)
+        return dataSource.keys.indexOf(profile.eventSymbol)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

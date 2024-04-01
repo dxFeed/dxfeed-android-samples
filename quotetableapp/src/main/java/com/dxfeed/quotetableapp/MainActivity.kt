@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.dxfeed.event.market.MarketEvent
 import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
@@ -16,6 +17,7 @@ import com.dxfeed.quotetableapp.adapters.QuoteAdapter
 import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
 import com.dxfeed.quotetableapp.extensions.stringValue
 import com.dxfeed.quotetableapp.tools.QDQuoteService
+
 
 class MainActivity : AppCompatActivity() {
     private val symbolsDataProvider = SymbolsDataProvider.getInstance()
@@ -51,6 +53,8 @@ class MainActivity : AppCompatActivity() {
             val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
             val adapter = QuoteAdapter(symbols)
             recyclerView.adapter = adapter
+            recyclerView.itemAnimator = null
+
 
             service.connect(symbols = symbols,
                 eventTypes = eventTypes,
@@ -61,14 +65,18 @@ class MainActivity : AppCompatActivity() {
                     }
                 },
                 eventsHandler = { events ->
-                    events.forEach { event ->
+                    val positions = events.mapNotNull { event ->
                         when (event) {
                             is Profile -> adapter.update(event)
                             is Quote -> adapter.update(event)
+                            else -> { null }
                         }
                     }
+
                     Handler(Looper.getMainLooper()).post {
-                        adapter.notifyDataSetChanged()
+                        positions.forEach {
+                            adapter.notifyItemChanged(it, null)
+                        }
                     }
                 })
         }
