@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Watch List</string>
+    <string name="app_name">Quote Table</string>
     <string name="bid_hint">bid value</string>
     <string name="ask_hint">ask value</string>
     <string name="edit_string">Edit</string>
-    <string name="quotes_title">Watch List</string>
+    <string name="quotes_title">Quote Table</string>
     <string name="symbols_title">Symbols</string>
     <string name="add_symbols_title">Add symbols</string>
 
