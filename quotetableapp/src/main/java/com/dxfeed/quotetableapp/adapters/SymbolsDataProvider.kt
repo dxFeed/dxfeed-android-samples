@@ -83,7 +83,7 @@ class SymbolsDataProvider: ViewModel() {
 
                 val allSymbolsStr = preferences.getString(kSelectedSymbolsKey, null)
                 cachedSelectedSymbols = if (allSymbolsStr == null) {
-                    arrayOf("AAPL", "IBM", "ETH/USD:GDAX")
+                    arrayOf("AAPL", "IBM", "MSFT", "CSCO", "GOOG", "PFE")
                 } else {
                     gson.fromJson(
                         allSymbolsStr,
