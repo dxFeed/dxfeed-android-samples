@@ -7,7 +7,6 @@ import android.os.Looper
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dxfeed.event.market.MarketEvent
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, EditSymbolsActivity::class.java)
             startActivity(intent)
         }
-        symbolsDataProvider.data.observe(this) {
+        symbolsDataProvider.symbols.observe(this) { it ->
             if (symbols == it) {
                 return@observe
             }
@@ -62,10 +61,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 },
                 eventsHandler = { events ->
-                    events.forEach {
-                        when (it) {
-                            is Profile -> adapter.update(it)
-                            is Quote -> adapter.update(it)
+                    events.forEach { event ->
+                        when (event) {
+                            is Profile -> adapter.update(event)
+                            is Quote -> adapter.update(event)
                         }
                     }
                     Handler(Looper.getMainLooper()).post {

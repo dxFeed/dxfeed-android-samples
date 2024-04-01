@@ -55,7 +55,7 @@ class EditSymbolsActivity : AppCompatActivity() {
 
         itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
-        symbolsDataProvider.data.observe(this) {
+        symbolsDataProvider.symbols.observe(this) {
             adapter.updateData(it)
         }
     }

@@ -22,8 +22,8 @@ class SymbolsDataProvider: ViewModel() {
     private val context: Context
         get() = QuoteApp.context!!
 
-    private val _data: MutableLiveData<List<String>>
-    val data: LiveData<List<String>>
+    private val _symbols: MutableLiveData<List<String>>
+    val symbols: LiveData<List<String>>
 
     private val gson = Gson()
     private var cachedSymbols = arrayOf<InstrumentInfo>()
@@ -37,8 +37,8 @@ class SymbolsDataProvider: ViewModel() {
     }
 
     init {
-        _data = MutableLiveData<List<String>>(selectedSymbols.toList())
-        data = _data
+        _symbols = MutableLiveData<List<String>>(selectedSymbols.toList())
+        symbols = _symbols
     }
     var allSymbols: Array<InstrumentInfo>
         get() {
@@ -101,7 +101,7 @@ class SymbolsDataProvider: ViewModel() {
             cachedSelectedSymbols = value
 
             val newValue = value.toList()
-            _data.value = newValue
+            _symbols.value = newValue
 
             var preferences: SharedPreferences =
                 context.getSharedPreferences(kPreferencesName, Context.MODE_PRIVATE)
