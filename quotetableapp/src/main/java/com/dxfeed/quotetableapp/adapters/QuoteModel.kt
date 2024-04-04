@@ -18,10 +18,10 @@ class QuoteModel(val symbol: String) {
     }
 
     val ask: String
-        get() = (quote?.askPrice ?: 0.0).format(2)
+        get() = (quote?.askPrice ?: 0.0).format(4)
 
     val bid: String
-        get() = (quote?.bidPrice ?: 0.0).format(2)
+        get() = (quote?.bidPrice ?: 0.0).format(4)
 
     val description: String
         get() = profileDesc

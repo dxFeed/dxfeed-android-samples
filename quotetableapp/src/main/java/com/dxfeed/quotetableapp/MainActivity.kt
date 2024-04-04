@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -39,11 +40,16 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = QuoteAdapter(listOf())
 
-        val buttonClick = findViewById<ImageButton>(R.id.editButton)
-        buttonClick.setOnClickListener {
+        findViewById<Button>(R.id.editButton).setOnClickListener {
             val intent = Intent(this, EditSymbolsActivity::class.java)
             startActivity(intent)
         }
+
+        findViewById<Button>(R.id.addButton).setOnClickListener {
+            val intent = Intent(this, AddSymbolsActivity::class.java)
+            startActivity(intent)
+        }
+
         symbolsDataProvider.symbols.observe(this) { it ->
             if (symbols == it) {
                 return@observe
@@ -59,10 +65,7 @@ class MainActivity : AppCompatActivity() {
             service.connect(symbols = symbols,
                 eventTypes = eventTypes,
                 connectionHandler = {
-                    Handler(Looper.getMainLooper()).post {
-                        val connectionTextView = findViewById<TextView>(R.id.connectionTextView);
-                        connectionTextView.text = it.stringValue(this)
-                    }
+
                 },
                 eventsHandler = { events ->
                     val positions = events.mapNotNull { event ->

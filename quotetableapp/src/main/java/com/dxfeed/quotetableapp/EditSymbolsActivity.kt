@@ -21,11 +21,7 @@ class EditSymbolsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.edit_quotes_activity)
-        val buttonClick = findViewById<Button>(R.id.add_button)
-        buttonClick.setOnClickListener {
-            val intent = Intent(this, AddSymbolsActivity::class.java)
-            startActivity(intent)
-        }
+
         recyclerView = findViewById(R.id.edit_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = EditSymbolsAdapter(symbolsDataProvider.selectedSymbols.toList())

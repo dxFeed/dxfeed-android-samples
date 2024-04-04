@@ -3,6 +3,8 @@
     <string name="bid_hint">bid value</string>
     <string name="ask_hint">ask value</string>
     <string name="edit_string">Edit</string>
+    <string name="add_string">+</string>
+
     <string name="quotes_title">Quote Table</string>
     <string name="symbols_title">Symbols</string>
     <string name="add_symbols_title">Add symbols</string>
