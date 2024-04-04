@@ -20,6 +20,7 @@ class AddSymbolsActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
         setContentView(R.layout.add_symbols_activity)
 
         recyclerView = findViewById(R.id.add_recycler_view)

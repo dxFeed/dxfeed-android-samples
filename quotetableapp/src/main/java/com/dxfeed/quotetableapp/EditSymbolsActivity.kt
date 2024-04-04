@@ -19,6 +19,7 @@ class EditSymbolsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
 
         setContentView(R.layout.edit_quotes_activity)
 
