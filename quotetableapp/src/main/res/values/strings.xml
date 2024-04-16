@@ -1,10 +1,17 @@
 <resources>
-    <string name="app_name">dxFeedTest</string>
+    <string name="app_name">Quote Table</string>
     <string name="bid_hint">bid value</string>
     <string name="ask_hint">ask value</string>
-    <string name="state_connecting">Connecting \uD83D\uDFE0</string>
-    <string name="state_connected">Connected \uD83D\uDFE2</string>
-    <string name="state_closed">Closed \uD83D\uDD34</string>
-    <string name="state_other">Not connected \uD83D\uDD34</string>
+    <string name="edit_string">Edit</string>
+    <string name="add_string">+</string>
+
+    <string name="quotes_title">Quote Table</string>
+    <string name="symbols_title">Symbols</string>
+    <string name="add_symbols_title">Add symbols</string>
+
+    <string name="state_connecting">\uD83D\uDFE0 Connecting</string>
+    <string name="state_connected">\uD83D\uDFE2 Connected</string>
+    <string name="state_closed">\uD83D\uDD34 Closed</string>
+    <string name="state_other">\uD83D\uDD34 Not connected</string>
 
 </resources>

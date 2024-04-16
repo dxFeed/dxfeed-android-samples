@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
         findViewById<TextView>(R.id.connectionTextView).text =
             DXEndpoint.State.NOT_CONNECTED.stringValue(this)
 

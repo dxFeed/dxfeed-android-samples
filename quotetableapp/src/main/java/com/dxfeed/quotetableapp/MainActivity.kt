@@ -1,73 +1,91 @@
 package com.dxfeed.quotetableapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.dxfeed.event.market.MarketEvent
 import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.adapters.QuoteAdapter
+import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
 import com.dxfeed.quotetableapp.extensions.stringValue
-import com.dxfeed.quotetableapp.tools.QDService
+import com.dxfeed.quotetableapp.tools.QDQuoteService
 
 
 class MainActivity : AppCompatActivity() {
-    private val symbols = listOf(
-    "AAPL",
-    "IBM",
-    "MSFT",
-    "EUR/CAD",
-    "ETH/USD:GDAX",
-    "GOOG",
-    "BAC",
-    "CSCO",
-    "ABCE",
-    "INTC",
-    "PFE"
-    )
-
+    private val symbolsDataProvider = SymbolsDataProvider.getInstance()
+    private var symbols = listOf<String>()
     private val eventTypes = listOf(
         Quote::class.java,
         Profile::class.java
     ) as List<Class<out MarketEvent>>
 
-    private val adapter = QuoteAdapter(symbols, this)
-    private val useWebSocket = true
+    private val useWebSocket = false
     private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
 
-    private val service = QDService(address = address, isWebSocket = useWebSocket)
+    private val service = QDQuoteService(address = address, isWebSocket = useWebSocket)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContentView(R.layout.activity_main)
+
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.adapter = QuoteAdapter(listOf())
 
-        service.connect(symbols = symbols,
-            eventTypes = eventTypes,
-            connectionHandler = {
-                Handler(Looper.getMainLooper()).post {
-                    val connectionTextView = findViewById<TextView>(R.id.connectionTextView);
-                    connectionTextView.text = it.stringValue(this)
-                }
-            },
-            eventsHandler = { events ->
-                events.forEach {
-                    when(it) {
-                        is Profile -> adapter.update(it)
-                        is Quote -> adapter.update(it)
+        findViewById<Button>(R.id.editButton).setOnClickListener {
+            val intent = Intent(this, EditSymbolsActivity::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<Button>(R.id.addButton).setOnClickListener {
+            val intent = Intent(this, AddSymbolsActivity::class.java)
+            startActivity(intent)
+        }
+
+        symbolsDataProvider.symbols.observe(this) { it ->
+            if (symbols == it) {
+                return@observe
+            }
+            symbols = it
+
+            val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
+            val adapter = QuoteAdapter(symbols)
+            recyclerView.adapter = adapter
+            recyclerView.itemAnimator = null
+
+
+            service.connect(symbols = symbols,
+                eventTypes = eventTypes,
+                connectionHandler = {
+
+                },
+                eventsHandler = { events ->
+                    val positions = events.mapNotNull { event ->
+                        when (event) {
+                            is Profile -> adapter.update(event)
+                            is Quote -> adapter.update(event)
+                            else -> { null }
+                        }
                     }
-                }
-                Handler(Looper.getMainLooper()).post {
-                    adapter.notifyDataSetChanged()
-                }
-            })
+
+                    Handler(Looper.getMainLooper()).post {
+                        positions.forEach {
+                            adapter.notifyItemChanged(it, null)
+                        }
+                    }
+                })
+        }
     }
+
 
 }

@@ -4,7 +4,7 @@ import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.extensions.format
 
-class QuoteModel(private val symbol: String) {
+class QuoteModel(val symbol: String) {
     private var quote: Quote? = null
     private var previousQuote: Quote? = null
     private var profileDesc: String = ""
@@ -18,10 +18,10 @@ class QuoteModel(private val symbol: String) {
     }
 
     val ask: String
-        get() = (quote?.askPrice ?: 0.0).format(2)
+        get() = (quote?.askPrice ?: 0.0).format(4)
 
     val bid: String
-        get() = (quote?.bidPrice ?: 0.0).format(2)
+        get() = (quote?.bidPrice ?: 0.0).format(4)
 
     val description: String
         get() = profileDesc
