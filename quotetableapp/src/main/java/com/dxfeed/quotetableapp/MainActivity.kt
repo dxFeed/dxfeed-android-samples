@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         Profile::class.java
     ) as List<Class<out MarketEvent>>
 
-    private val useWebSocket = false
+    private val useWebSocket = true
     private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
 
     private val service = QDQuoteService(address = address, isWebSocket = useWebSocket)
