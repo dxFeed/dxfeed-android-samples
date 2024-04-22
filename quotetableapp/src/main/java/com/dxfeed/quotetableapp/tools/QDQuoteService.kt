@@ -15,6 +15,7 @@ class QDQuoteService(private val address: String, private val isWebSocket: Boole
         if (isWebSocket) {
             // The experimental property must be enabled.
             System.setProperty("dxfeed.experimental.dxlink.enable", "true")
+            System.setProperty("scheme", "ext:opt:sysprops,resource:dxlink.xml")
         }
         executorService.execute {
             if (endpoint == null) {
