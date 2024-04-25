@@ -1,23 +1,20 @@
 package com.dxfeed.quotetableapp
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.dxfeed.event.market.MarketEvent
 import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.adapters.QuoteAdapter
 import com.dxfeed.quotetableapp.adapters.SymbolsDataProvider
-import com.dxfeed.quotetableapp.extensions.stringValue
 import com.dxfeed.quotetableapp.tools.QDQuoteService
 
 
@@ -46,6 +43,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.editButton).setOnClickListener {
             val intent = Intent(this, EditSymbolsActivity::class.java)
             startActivity(intent)
+        }
+        findViewById<Button>(R.id.infoButton).setOnClickListener{
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://dxfeed.com/dxfeed-news/"))
+            startActivity(browserIntent)
         }
 
         findViewById<Button>(R.id.addButton).setOnClickListener {

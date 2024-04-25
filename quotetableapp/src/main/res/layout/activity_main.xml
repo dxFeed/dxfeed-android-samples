@@ -61,11 +61,29 @@
 
         android:layout_marginTop="8dp"
         android:background="@color/background"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/infoButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_text_view" />
 
+    <Button
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textAllCaps="false"
 
+        android:id="@+id/infoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:textSize="9sp"
+        android:gravity="left"
+        android:drawableTint="@color/white"
+        android:drawableLeft="@android:drawable/ic_menu_info_details"
+        android:paddingLeft="0dip"
+        android:background="@android:color/transparent"
+        android:text="@string/info_string"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
