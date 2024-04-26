@@ -10,7 +10,20 @@ import com.dxfeed.event.market.Profile
 import com.dxfeed.event.market.Quote
 import com.dxfeed.quotetableapp.R
 
-class QuoteAdapter(mList: List<String>) : RecyclerView.Adapter<QuoteAdapter.ViewHolder>() {
+class QuoteAdapter(mList: List<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    enum class ViewType {
+        CELL,FOOTER
+    }
+
+    inline fun <reified T : Enum<T>> Int.toEnum(): T? {
+        return enumValues<T>().firstOrNull { it.ordinal == this }
+    }
+
+    //Enum to Int
+    inline fun <reified T : Enum<T>> T.toInt(): Int {
+        return this.ordinal
+    }
+
     private val dataSource = LinkedHashMap(mList.associateWith {
         QuoteModel(it)
     })
@@ -25,21 +38,34 @@ class QuoteAdapter(mList: List<String>) : RecyclerView.Adapter<QuoteAdapter.View
         return dataSource.keys.indexOf(profile.eventSymbol)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.card_view_design, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val symbol = dataSource.keys.elementAt(position)
-        dataSource[symbol]?.apply {
-            holder.bind(this)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val vType = viewType.toEnum<ViewType>()
+        if (vType == ViewType.FOOTER) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.footer_view, parent, false)
+            return FooterViewHolder(view)
+        } else {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.card_view_design, parent, false)
+            return ViewHolder(view)
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataSource.size
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ViewHolder) {
+            val symbol = dataSource.keys.elementAt(position)
+            dataSource[symbol]?.apply {
+                holder.bind(this)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int =
+        if (position == dataSource.size) ViewType.FOOTER.toInt() else ViewType.CELL.toInt()
+
+
+override fun getItemCount(): Int {
+        return dataSource.size + 1
     }
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
@@ -70,5 +96,13 @@ class QuoteAdapter(mList: List<String>) : RecyclerView.Adapter<QuoteAdapter.View
         }
     }
 
+    class FooterViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+
+        private val textView: TextView = itemView.findViewById(R.id.symbol_text_view)
+
+        fun bind(text: String) {
+            textView.text = text
+        }
+    }
 
 }

@@ -3,7 +3,8 @@
     <string name="bid_hint">bid value</string>
     <string name="ask_hint">ask value</string>
     <string name="edit_string">Edit</string>
-    <string name="info_string">Click for more about dxFeed and the Swift API. \nNOTICE: data delayed at least by 15 min</string>
+    <string name="info_string">Learn more about dxFeed APIs</string>
+    <string name="notice_string">NOTICE: Data is delayed at least 15 minutes.</string>
 
     <string name="add_string">+</string>
 
