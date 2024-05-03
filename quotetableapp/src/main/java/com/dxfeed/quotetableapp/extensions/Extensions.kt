@@ -4,6 +4,8 @@ import android.content.Context
 import com.dxfeed.api.DXEndpoint
 import com.dxfeed.quotetableapp.R
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 fun DXEndpoint.State.stringValue(context: Context): String {
     return when (this) {
@@ -14,10 +16,4 @@ fun DXEndpoint.State.stringValue(context: Context): String {
             context.getString(R.string.state_other)
         }
     }
-}
-
-fun Double.format(fractionDigits: Int): String {
-    val df = DecimalFormat()
-    df.maximumFractionDigits = fractionDigits
-    return df.format(this)
 }

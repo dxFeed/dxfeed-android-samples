@@ -47,7 +47,9 @@
 				android:paddingLeft="0dp"
 				android:paddingRight="0dp"
 				android:textColor="@color/white"
-				android:textSize="12sp"
+				android:autoSizeTextType="uniform"
+				android:autoSizeMaxTextSize="17sp"
+				android:autoSizeMinTextSize="10sp"
 				app:cornerRadius="10dp" />
 
 			<Button
@@ -61,7 +63,9 @@
 				android:paddingLeft="0dp"
 				android:paddingRight="0dp"
 				android:textColor="@color/white"
-				android:textSize="12sp"
+				android:autoSizeTextType="uniform"
+				android:autoSizeMaxTextSize="17sp"
+				android:autoSizeMinTextSize="10sp"
 				app:cornerRadius="10dp" />
 		</com.google.android.material.button.MaterialButtonToggleGroup>
 	</LinearLayout>
