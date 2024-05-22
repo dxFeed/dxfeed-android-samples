@@ -46,20 +46,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "androidx.core:core-splashscreen:1.0.0"
 
-    implementation ('com.devexperts.qd:dxlink-websocket:3.330') {
-        exclude module:"qds"
-    }
+    implementation ('com.devexperts.qd:dxlink-websocket:3.332')
 
     implementation ('com.devexperts.mdd:auther-api:476') {
-        exclude module:"qds"
         exclude module:"qds-monitoring"
     }
 
     implementation 'xerces:xercesImpl:2.12.1'
-
-    implementation files("../libs/qds-3.331-SNAPSHOT.jar")
-    implementation ('com.devexperts.qd:dxfeed-api:3.330')
-    implementation ('com.devexperts.qd:dxlib:3.330')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
