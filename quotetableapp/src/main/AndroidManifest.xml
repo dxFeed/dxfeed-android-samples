@@ -33,6 +33,12 @@
             android:exported="true">
 
         </activity>
+        <activity
+            android:configChanges="screenSize|orientation|screenLayout|navigation"
+            android:name=".CandleChartActivity"
+            android:exported="true">
+
+        </activity>
     </application>
 
 </manifest>

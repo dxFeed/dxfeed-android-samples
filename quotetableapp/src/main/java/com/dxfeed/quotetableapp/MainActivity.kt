@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         Profile::class.java
     ) as List<Class<out MarketEvent>>
 
-    private val useWebSocket = true
+    private val useWebSocket = false
 
     private val address = if (useWebSocket) "dxlink:wss://demo.dxfeed.com/dxlink-ws" else "demo.dxfeed.com:7300"
 
@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = QuoteAdapter(listOf())
+        recyclerView.adapter = QuoteAdapter(listOf()) { actionType, symbol ->
+            showActivity(actionType, symbol)
+        }
 
         findViewById<Button>(R.id.editButton).setOnClickListener {
             val intent = Intent(this, EditSymbolsActivity::class.java)
@@ -61,7 +63,9 @@ class MainActivity : AppCompatActivity() {
             symbols = it
 
             val recyclerView = findViewById<RecyclerView>(R.id.recycler_view);
-            val adapter = QuoteAdapter(symbols)
+            val adapter = QuoteAdapter(symbols) { actionType, symbol ->
+                showActivity(actionType, symbol)
+            }
             recyclerView.adapter = adapter
             recyclerView.itemAnimator = null
 
@@ -89,5 +93,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showActivity(type: QuoteAdapter.ActionType, symbol: String) {
+        when (type) {
+            QuoteAdapter.ActionType.DepthOfMarket -> {
+                val intent = Intent(this, CandleChartActivity::class.java)
+                intent.putExtra(CandleChartActivity.symbol, "DepthOfMarket EMPTY")
+                startActivity(intent)
+            }
+            QuoteAdapter.ActionType.Candle -> {
+                val intent = Intent(this, CandleChartActivity::class.java)
+                intent.putExtra(CandleChartActivity.symbol, symbol)
+                intent.putExtra(CandleChartActivity.address, address)
+                intent.putExtra(CandleChartActivity.useWebSocket, useWebSocket)
+                startActivity(intent)
+            }
+        }
+    }
 
 }

@@ -1,0 +1,9 @@
+<!-- res/menu/popup_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_item1"
+        android:title="@string/candle_chart_menu" />
+    <item
+        android:id="@+id/menu_item2"
+        android:title="@string/market_depth_menu" />
+</menu>
