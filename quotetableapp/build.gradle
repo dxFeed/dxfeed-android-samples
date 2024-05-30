@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation ('com.devexperts.qd:dxlink-websocket:3.332')
+    implementation ('com.dxfeed.api:market-depth-model:1.6')
 
     implementation ('com.devexperts.mdd:auther-api:476') {
         exclude module:"qds-monitoring"

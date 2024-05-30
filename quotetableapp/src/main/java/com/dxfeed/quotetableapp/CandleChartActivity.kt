@@ -15,23 +15,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.dxfeed.event.candle.Candle
 import com.dxfeed.event.candle.CandleType
-import com.dxfeed.quotetableapp.tools.CandlesService
 import com.github.mikephil.charting.charts.CandleStickChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import java.lang.Float.max
 import java.text.SimpleDateFormat
 import java.util.Date
+import com.dxfeed.api.model.CandleService
+import com.dxfeed.event.IndexedEvent
+import com.github.mikephil.charting.data.Entry
 
-
-class CandleChartActivity: AppCompatActivity() {
-    lateinit var candleService: CandlesService
+class CandleChartActivity : AppCompatActivity() {
     lateinit var pointIcon: Drawable
+    lateinit var candleService: CandleService
+    val entries = mutableMapOf<Long, Entry>()
+    lateinit var candleStickChart: CandleStickChart
 
     companion object {
         const val symbol = "symbol"
@@ -39,6 +40,7 @@ class CandleChartActivity: AppCompatActivity() {
         const val useWebSocket = "useWebSocket"
         const val maxCount = 150
     }
+
     var candles = listOf<Candle>()
     var resetScroll = true
 
@@ -47,7 +49,9 @@ class CandleChartActivity: AppCompatActivity() {
         setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
         setContentView(R.layout.candle_chart_activity)
 
-        val drawable = ContextCompat.getDrawable(this, android.R.drawable.radiobutton_off_background)
+        candleStickChart = findViewById(R.id.candle_stick_chart)
+        val drawable =
+            ContextCompat.getDrawable(this, android.R.drawable.radiobutton_off_background)
 
 
         val bitmap = (drawable as BitmapDrawable).bitmap
@@ -63,7 +67,10 @@ class CandleChartActivity: AppCompatActivity() {
         val symbolTitle = findViewById<TextView>(R.id.symbol_title)
         symbolTitle.text = title
 
-        candleService = CandlesService(intent.getStringExtra(address)!!, intent.getBooleanExtra(useWebSocket, false))
+        candleService = CandleService(
+            intent.getStringExtra(address)!!,
+            intent.getBooleanExtra(useWebSocket, false)
+        )
         val spinner: Spinner = findViewById(R.id.spinnerOptions)
 
         addCandleChart()
@@ -78,66 +85,114 @@ class CandleChartActivity: AppCompatActivity() {
         }
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-               val type = when (position) {
-                   0 -> CandleType.MINUTE
-                   1 -> CandleType.HOUR
-                   2 -> CandleType.DAY
-                   3 -> CandleType.WEEK
-                   4 -> CandleType.MONTH
-                   5 -> CandleType.YEAR
-                   else -> {
-                       CandleType.WEEK
-                   }
-               }
-                candleService.connect(title!!, type) {
-                    candles = it.takeLast(maxCount)
-                    println(candles)
-                    drawChart(candles)
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val type = when (position) {
+                    0 -> CandleType.MINUTE
+                    1 -> CandleType.HOUR
+                    2 -> CandleType.DAY
+                    3 -> CandleType.WEEK
+                    4 -> CandleType.MONTH
+                    5 -> CandleType.YEAR
+                    else -> {
+                        CandleType.WEEK
+                    }
+                }
+                candleService.connect(title!!, type) { list, isSnapshot ->
+                    val list = list.reversed()
+                    println("Candles count ${candles.count()}")
+                    if (!candles.isNullOrEmpty()) {
+                        println(candles.first())
+                        println(candles.last())
+                    }
+                    if (isSnapshot) {
+                        candles = list.takeLast(maxCount)
+                        drawChart(candles)
+                    } else {
+                        updateChart(list)
+                    }
                 }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
         //set selected day by default
-        spinner.setSelection(2)
-
-
-
+        spinner.setSelection(0)
     }
 
+    private fun updateChart(candles: List<Candle>) {
+        candles.forEach {
+            if ((it.eventFlags and IndexedEvent.REMOVE_EVENT) != 0) {
+                // need remove
+                println("will remove entries")
+            } else {
+                // need update
+                println("will update entries")
+
+                val entry = entries.get(it.index)
+                if (entry != null) {
+                    println("update entries ${entry.x}")
+                    val newEntry = convertToCandleEntry(it, entry.x)
+                    entries[it.index] = newEntry
+                    candleStickChart.data.removeEntry(entry, 0)
+                    candleStickChart.data.addEntry(newEntry, 0)
+                    candleStickChart.data.notifyDataChanged()
+                    candleStickChart.notifyDataSetChanged(); // let the chart know it's data changed
+                    candleStickChart.invalidate();
+                } else {
+                    val newEntry = convertToCandleEntry(it, entries.count().toFloat())
+                    entries[it.index] = newEntry
+                    candleStickChart.data.addEntry(newEntry, 0)
+                    candleStickChart.data.notifyDataChanged()
+                    candleStickChart.notifyDataSetChanged(); // let the chart know it's data changed
+                    candleStickChart.invalidate();
+                }
+            }
+        }
+    }
+    private fun convertToCandleEntry(candle: Candle, index: Float): CandleEntry {
+        val entry = if (candle.high == candle.low && candle.open == candle.close) {
+
+            CandleEntry(
+                index,
+                candle.high.toFloat(),
+                candle.low.toFloat(),
+                candle.open.toFloat(),
+                candle.close.toFloat(),
+                pointIcon
+            )
+        } else {
+            CandleEntry(
+                index,
+                candle.high.toFloat(),
+                candle.low.toFloat(),
+                candle.open.toFloat(),
+                candle.close.toFloat()
+            )
+        }
+        return entry
+    }
     private fun drawChart(candles: List<Candle>) {
-        val candleStickChart = findViewById<CandleStickChart>(R.id.candle_stick_chart)
         if (candles.isNullOrEmpty()) {
+            entries.clear()
             resetScroll = true
             candleStickChart.clear()
             candleStickChart.invalidate()
             return
         }
         val yValsCandleStick = candles.mapIndexed { index, candle ->
-            if (candle.high == candle.low && candle.open == candle.close) {
 
-                CandleEntry(
-                    index.toFloat(),
-                    candle.high.toFloat(),
-                    candle.low.toFloat(),
-                    candle.open.toFloat(),
-                    candle.close.toFloat(),
-                    pointIcon
-                )
-            } else {
-                CandleEntry(
-                    index.toFloat(),
-                    candle.high.toFloat(),
-                    candle.low.toFloat(),
-                    candle.open.toFloat(),
-                    candle.close.toFloat()
-                )
-            }
+            val entry = convertToCandleEntry(candle, index.toFloat())
+            entries.put(candle.index, entry)
+            entry
         }
         val set1 = CandleDataSet(yValsCandleStick, "DataSet 1")
 
-//        set1.color = Color.rgb(80, 80, 80)
         set1.shadowColor = ContextCompat.getColor(this, R.color.priceBackground)
         set1.shadowWidth = 0.8f
 
@@ -151,17 +206,60 @@ class CandleChartActivity: AppCompatActivity() {
         val data = CandleData(set1)
 // set data
         candleStickChart.data = data
-        candleStickChart.setVisibleXRangeMaximum(40f)
+        candleStickChart.fitScreen();
+
+        candleStickChart.notifyDataSetChanged()
+        candleStickChart.invalidate()
+
+        candleStickChart.setVisibleXRangeMaximum(30f)
         if (resetScroll) {
-            candleStickChart.moveViewToX((candles.count() - 1).toFloat())
+            val scrollTo = max(0.toFloat(), candles.count() - 30f)
+            println("will scroll to ${scrollTo}")
+            candleStickChart.moveViewToX(scrollTo)
             resetScroll = false
         }
-
-        candleStickChart.invalidate()
     }
 
     private fun addCandleChart() {
-        val candleStickChart = findViewById<CandleStickChart>(R.id.candle_stick_chart)
+//        candleStickChart.onChartGestureListener = object : OnChartGestureListener {
+//            override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+//                println("onChartGestureStart")
+//            }
+//
+//            override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+//                println("onChartGestureEnd")
+//            }
+//
+//            override fun onChartLongPressed(me: MotionEvent?) {
+//                println("onChartLongPressed")
+//            }
+//
+//            override fun onChartDoubleTapped(me: MotionEvent?) {
+//                println("onChartDoubleTapped")
+//            }
+//
+//            override fun onChartSingleTapped(me: MotionEvent?) {
+//                println("onChartSingleTapped")
+//            }
+//
+//            override fun onChartFling(
+//                me1: MotionEvent?,
+//                me2: MotionEvent?,
+//                velocityX: Float,
+//                velocityY: Float
+//            ) {
+//                println("onChartFling")
+//            }
+//
+//            override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
+//                println("onChartScale")
+//            }
+//
+//            override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
+//                println("onChartTranslate")
+//            }
+//        }
+
         candleStickChart.setNoDataText("")
         candleStickChart.description.text = ""
         candleStickChart.isHighlightPerDragEnabled = true
@@ -169,18 +267,6 @@ class CandleChartActivity: AppCompatActivity() {
         candleStickChart.isDoubleTapToZoomEnabled = false
 
         candleStickChart.setDrawBorders(true)
-//        candleStickChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-//            override fun onValueSelected(e: Entry?, h: Highlight?) {
-//                e?.let {
-//
-//                }
-//            }
-//
-//            override fun onNothingSelected() {
-//                println("onNothingSelected") }
-//        })
-//        candleStickChart.setBorderColor(resources.getColor(R.color.))
-
         val yAxis = candleStickChart.axisLeft
         yAxis.setDrawGridLines(false)
         yAxis.setDrawLabels(false)
@@ -200,11 +286,13 @@ class CandleChartActivity: AppCompatActivity() {
         xAxis.labelCount = 4
         xAxis.setValueFormatter(object : IndexAxisValueFormatter() {
             override fun getFormattedValue(value: Float): String {
+                if (value >= candles.count().toFloat()) {
+                    return ""
+                }
                 val candle = candles[value.toInt()]
                 val date = Date(candle.time)
                 var formatter = SimpleDateFormat("dd/MM/yyyy")
-                var string = formatter.format(date)
-                return string
+                return formatter.format(date)
             }
         })
         val l = candleStickChart.legend

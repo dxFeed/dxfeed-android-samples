@@ -1,24 +1,20 @@
-package com.dxfeed.quotetableapp.tools
+package com.dxfeed.api.model
 
 import com.devexperts.util.TimeUtil
 import com.dxfeed.api.DXEndpoint
-import com.dxfeed.api.osub.TimeSeriesSubscriptionSymbol
 import com.dxfeed.event.candle.Candle
 import com.dxfeed.event.candle.CandlePeriod
 import com.dxfeed.event.candle.CandleSymbol
 import com.dxfeed.event.candle.CandleType
-import com.dxfeed.event.market.MarketEvent
-import com.dxfeed.event.market.Quote
-import com.dxfeed.model.TimeSeriesEventModel
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class CandlesService(address: String, isWebSocket: Boolean) {
+class CandleService(address: String, isWebSocket: Boolean) {
     private val executorService: ExecutorService = Executors.newFixedThreadPool(1)
     var endpoint: DXEndpoint? = null
+    private var candlesModel: TimeSeriesTxModel<Candle>? = null
 
-
-    val candlesModel = TimeSeriesEventModel(Candle::class.java)
+    private val builder = TimeSeriesTxModel.newBuilder(Candle::class.java)
 
     init {
         if (isWebSocket) {
@@ -32,12 +28,12 @@ class CandlesService(address: String, isWebSocket: Boolean) {
             .build()
         endpoint.connect(address)
         this.endpoint = endpoint
-        candlesModel.attach(endpoint.feed)
+        builder.withFeed(endpoint.feed)
     }
 
     fun connect(symbol: String,
                 type: CandleType,
-                eventsHandler: (List<Candle>) -> Unit){
+                eventsHandler: (List<Candle>, Boolean) -> Unit){
         val period = CandlePeriod.valueOf(1.0, type)
         val startDate = when (type) {
             CandleType.MINUTE -> {
@@ -63,17 +59,19 @@ class CandlesService(address: String, isWebSocket: Boolean) {
             }
         }
         executorService.execute {
-            candlesModel.clear()
-            candlesModel.eventsList.addListener {
-                eventsHandler(candlesModel.eventsList)
-            }
+            candlesModel?.close()
+//            candlesModel.eventsList.addListener {
+//                eventsHandler(it.source.toList())
+//            }
             val candleSymbol = CandleSymbol.valueOf(symbol, period)
-            candlesModel.symbol = candleSymbol
-            candlesModel.fromTime = startDate
+            builder.withSymbol(candleSymbol).withFromTime(startDate)
+            builder.withExecutor(executorService)
+
+            builder.withListener {
+                eventsHandler(it.events, it.isSnapshot)
+            }
+            candlesModel = builder.build()
         }
-
     }
-
-
 
 }
