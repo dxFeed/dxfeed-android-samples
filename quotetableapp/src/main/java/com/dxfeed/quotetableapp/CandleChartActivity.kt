@@ -27,8 +27,13 @@ import java.util.Date
 import com.dxfeed.api.model.CandleService
 import com.dxfeed.event.IndexedEvent
 import com.github.mikephil.charting.data.Entry
+import java.time.LocalDate
 
-class CandleChartActivity : AppCompatActivity() {
+interface CandlesData {    // Not sure if this is correct
+    fun getDate(xValue: Float?): Date
+}
+
+class CandleChartActivity : AppCompatActivity(), CandlesData {
     lateinit var pointIcon: Drawable
     lateinit var candleService: CandleService
     val entries = mutableMapOf<Long, Entry>()
@@ -41,8 +46,7 @@ class CandleChartActivity : AppCompatActivity() {
         const val maxCount = 150
     }
 
-    var candles = listOf<Candle>()
-    var resetScroll = true
+    var localCandles = mutableListOf<Candle>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,16 +106,18 @@ class CandleChartActivity : AppCompatActivity() {
                         CandleType.WEEK
                     }
                 }
+                candleStickChart.highlightValue(null)
+                candleStickChart.clear()
                 candleService.connect(title!!, type) { list, isSnapshot ->
                     val list = list.reversed()
-                    println("Candles count ${candles.count()}")
-                    if (!candles.isNullOrEmpty()) {
-                        println(candles.first())
-                        println(candles.last())
+                    println("Candles count ${localCandles.count()}")
+                    if (!localCandles.isNullOrEmpty()) {
+                        println(localCandles.first())
+                        println(localCandles.last())
                     }
                     if (isSnapshot) {
-                        candles = list.takeLast(maxCount)
-                        drawChart(candles)
+                        localCandles = list.takeLast(maxCount).toMutableList()
+                        drawChart(localCandles)
                     } else {
                         updateChart(list)
                     }
@@ -128,16 +134,23 @@ class CandleChartActivity : AppCompatActivity() {
     private fun updateChart(candles: List<Candle>) {
         candles.forEach {
             if ((it.eventFlags and IndexedEvent.REMOVE_EVENT) != 0) {
-                // need remove
-                println("will remove entries")
+                // remove
+                localCandles.removeIf { toRemove ->
+                    toRemove.index == it.index
+                }
+                entries.remove(it.index)
             } else {
-                // need update
-                println("will update entries")
-
+                // update
                 val entry = entries.get(it.index)
                 if (entry != null) {
-                    println("update entries ${entry.x}")
                     val newEntry = convertToCandleEntry(it, entry.x)
+                    localCandles.replaceAll { toReplace ->
+                        if (toReplace.index == it.index) {
+                            it
+                        } else {
+                            toReplace
+                        }
+                    }
                     entries[it.index] = newEntry
                     candleStickChart.data.removeEntry(entry, 0)
                     candleStickChart.data.addEntry(newEntry, 0)
@@ -145,7 +158,9 @@ class CandleChartActivity : AppCompatActivity() {
                     candleStickChart.notifyDataSetChanged(); // let the chart know it's data changed
                     candleStickChart.invalidate();
                 } else {
+                    // insert
                     val newEntry = convertToCandleEntry(it, entries.count().toFloat())
+                    localCandles.add(it)
                     entries[it.index] = newEntry
                     candleStickChart.data.addEntry(newEntry, 0)
                     candleStickChart.data.notifyDataChanged()
@@ -178,13 +193,7 @@ class CandleChartActivity : AppCompatActivity() {
         return entry
     }
     private fun drawChart(candles: List<Candle>) {
-        if (candles.isNullOrEmpty()) {
-            entries.clear()
-            resetScroll = true
-            candleStickChart.clear()
-            candleStickChart.invalidate()
-            return
-        }
+        entries.clear()
         val yValsCandleStick = candles.mapIndexed { index, candle ->
 
             val entry = convertToCandleEntry(candle, index.toFloat())
@@ -202,22 +211,16 @@ class CandleChartActivity : AppCompatActivity() {
         set1.increasingPaintStyle = Paint.Style.FILL
         set1.setDrawValues(false)
 
-// create a data object with the datasets
         val data = CandleData(set1)
-// set data
         candleStickChart.data = data
-        candleStickChart.fitScreen();
+//        candleStickChart.fitScreen();
 
-        candleStickChart.notifyDataSetChanged()
-        candleStickChart.invalidate()
+//        candleStickChart.notifyDataSetChanged()
+//        candleStickChart.invalidate()
 
         candleStickChart.setVisibleXRangeMaximum(30f)
-        if (resetScroll) {
-            val scrollTo = max(0.toFloat(), candles.count() - 30f)
-            println("will scroll to ${scrollTo}")
-            candleStickChart.moveViewToX(scrollTo)
-            resetScroll = false
-        }
+        val scrollTo = max(0.toFloat(), candles.count() - 30f)
+        candleStickChart.moveViewToX(scrollTo)
     }
 
     private fun addCandleChart() {
@@ -286,10 +289,10 @@ class CandleChartActivity : AppCompatActivity() {
         xAxis.labelCount = 4
         xAxis.setValueFormatter(object : IndexAxisValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                if (value >= candles.count().toFloat()) {
+                if (value >= localCandles.count().toFloat()) {
                     return ""
                 }
-                val candle = candles[value.toInt()]
+                val candle = localCandles[value.toInt()]
                 val date = Date(candle.time)
                 var formatter = SimpleDateFormat("dd/MM/yyyy")
                 return formatter.format(date)
@@ -298,8 +301,22 @@ class CandleChartActivity : AppCompatActivity() {
         val l = candleStickChart.legend
         l.isEnabled = false
 
-        val mv = CustomMarkerView(this, R.layout.marker_view)
+        val mv = CustomMarkerView(this, R.layout.marker_view).apply {
+            chartView = candleStickChart
+        }
         candleStickChart.marker = mv
         candleStickChart.isHighlightPerTapEnabled = true
+    }
+
+    override fun getDate(xValue: Float?): Date {
+        if (xValue != null) {
+            if (xValue >= localCandles.count().toFloat()) {
+                return Date()
+            }
+            val candle = localCandles[xValue.toInt()]
+            return Date(candle.time)
+        } else {
+            return Date()
+        }
     }
 }

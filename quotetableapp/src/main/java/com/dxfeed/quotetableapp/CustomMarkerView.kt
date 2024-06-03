@@ -1,44 +1,42 @@
 package com.dxfeed.quotetableapp
 
 import android.content.Context
-import android.view.View
 import android.widget.TextView
-import com.devexperts.util.TimeFormat
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import java.text.SimpleDateFormat
 
 
-class CustomMarkerView(context: Context?, layoutResource: Int) :
-    MarkerView(context, layoutResource) {
-    private val tvContent: TextView
-
+class CustomMarkerView(val context1: Context?, layoutResource: Int) :
+    MarkerView(context1, layoutResource) {
+    private val openText: TextView = findViewById(R.id.openContent)
+    private val closeText: TextView = findViewById(R.id.closeContent)
+    private val highText: TextView = findViewById(R.id.highContent)
+    private val lowText: TextView = findViewById(R.id.lowContent)
+    private val dateText: TextView = findViewById(R.id.dateContent)
+    private val dateFormater = SimpleDateFormat()
     init {
-        // this markerview only displays a textview
-        tvContent = findViewById(R.id.openContent)
-        println(tvContent)
+                // this markerview only displays a textview
     }
 
     // callbacks everytime the MarkerView is redrawn, can be used to update the
     // content (user-interface)
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         super.refreshContent(e, highlight)
-        tvContent.text = ""
+
         (e as? CandleEntry)?.let {
-            val close = it.close
-            val open = it.open
-            val high = it.high
-            val low = it.low
-
-            tvContent.text =
-                    "Open: ${open} \t Close ${close}\n" +
-                    "High: ${high} \t Low ${low}"
+            openText.text = "Open: ${it.open}"
+            closeText.text = "Close: ${it.close}"
+            highText.text = "High: ${it.high}"
+            lowText.text = "Low: ${it.low}"
         }
-    }
 
-    override fun getOffset(): MPPointF {
-        return MPPointF((-(width / 2)).toFloat(), -height.toFloat())
+        (context1 as? CandlesData)?.let {
+            val date = it.getDate(e?.x)
+            dateText.text =  dateFormater.format(date)
+        }
     }
 }
