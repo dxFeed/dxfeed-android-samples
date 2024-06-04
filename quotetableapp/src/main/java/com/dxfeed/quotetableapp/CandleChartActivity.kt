@@ -132,7 +132,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
             }
         }
         //set selected day by default
-        spinner.setSelection(0)
+        spinner.setSelection(2)
     }
 
     private fun updateChart(candles: List<Candle>) {
