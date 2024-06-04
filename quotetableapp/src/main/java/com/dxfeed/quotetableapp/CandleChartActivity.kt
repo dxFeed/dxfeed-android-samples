@@ -24,7 +24,6 @@ import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import java.lang.Float.max
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -38,8 +37,9 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
     lateinit var candleService: CandleService
     val entries = mutableMapOf<Long, Entry>()
     lateinit var candleStickChart: CandleStickChart
-    val dateFormatter = SimpleDateFormat("MM.yyyy")
-    val dateTimeFormatter = SimpleDateFormat("dd.MM.yy hh:mm")
+    val yearDateFormatter = SimpleDateFormat("MM.yyyy")
+    val dateFormatter = SimpleDateFormat("dd.MM.yy")
+    val hourDateFormatter = SimpleDateFormat("dd.MM.yy hh:mm")
     lateinit var candleType: CandleType
     companion object {
         const val symbol = "symbol"
@@ -296,9 +296,11 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                 val candle = localCandles[value.toInt()]
                 val date = Date(candle.time)
                 if (candleType == CandleType.YEAR) {
-                    return dateFormatter.format(date)
+                    return yearDateFormatter.format(date)
+                } else if (candleType == CandleType.HOUR || candleType == CandleType.MINUTE ){
+                    return hourDateFormatter.format(date)
                 }
-                return dateTimeFormatter.format(date)
+                return dateFormatter.format(date)
             }
         })
         val l = candleStickChart.legend
