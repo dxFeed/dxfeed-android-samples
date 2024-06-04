@@ -30,7 +30,9 @@ class CandleService(address: String, isWebSocket: Boolean) {
         this.endpoint = endpoint
         builder.withFeed(endpoint.feed)
     }
-
+    fun close() {
+        candlesModel?.close()
+    }
     fun connect(symbol: String,
                 type: CandleType,
                 eventsHandler: (List<Candle>, Boolean) -> Unit){

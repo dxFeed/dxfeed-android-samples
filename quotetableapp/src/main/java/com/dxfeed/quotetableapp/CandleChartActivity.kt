@@ -49,6 +49,10 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
     }
 
     var localCandles = mutableListOf<Candle>()
+    override fun onDestroy() {
+        super.onDestroy()
+        candleService.close()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +62,6 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         candleStickChart = findViewById(R.id.candle_stick_chart)
         val drawable =
             ContextCompat.getDrawable(this, android.R.drawable.radiobutton_off_background)
-
 
         val bitmap = (drawable as BitmapDrawable).bitmap
         val d: Drawable = BitmapDrawable(resources, Bitmap.createScaledBitmap(bitmap, 10, 10, true))

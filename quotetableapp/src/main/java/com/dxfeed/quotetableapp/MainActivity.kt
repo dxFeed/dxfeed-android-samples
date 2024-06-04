@@ -96,8 +96,10 @@ class MainActivity : AppCompatActivity() {
     private fun showActivity(type: QuoteAdapter.ActionType, symbol: String) {
         when (type) {
             QuoteAdapter.ActionType.DepthOfMarket -> {
-                val intent = Intent(this, CandleChartActivity::class.java)
-                intent.putExtra(CandleChartActivity.symbol, "DepthOfMarket EMPTY")
+                val intent = Intent(this, MarketDepthActivity::class.java)
+                intent.putExtra(MarketDepthActivity.symbol, symbol)
+                intent.putExtra(MarketDepthActivity.address, address)
+                intent.putExtra(MarketDepthActivity.useWebSocket, useWebSocket)
                 startActivity(intent)
             }
             QuoteAdapter.ActionType.Candle -> {
