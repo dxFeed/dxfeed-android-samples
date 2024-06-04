@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.dxfeed.api.model.CandleService
+import com.dxfeed.event.IndexedEvent
 import com.dxfeed.event.candle.Candle
 import com.dxfeed.event.candle.CandleType
 import com.github.mikephil.charting.charts.CandleStickChart
@@ -20,14 +22,12 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.lang.Float.max
+import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.Date
-import com.dxfeed.api.model.CandleService
-import com.dxfeed.event.IndexedEvent
-import com.github.mikephil.charting.data.Entry
-import java.time.LocalDate
 
 interface CandlesData {    // Not sure if this is correct
     fun getDate(xValue: Float?): Date
@@ -38,7 +38,9 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
     lateinit var candleService: CandleService
     val entries = mutableMapOf<Long, Entry>()
     lateinit var candleStickChart: CandleStickChart
-
+    val dateFormatter = SimpleDateFormat("MM.yyyy")
+    val dateTimeFormatter = SimpleDateFormat("dd.MM.yy hh:mm")
+    lateinit var candleType: CandleType
     companion object {
         const val symbol = "symbol"
         const val address = "address"
@@ -106,11 +108,11 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                         CandleType.WEEK
                     }
                 }
+                candleType = type
                 candleStickChart.highlightValue(null)
                 candleStickChart.clear()
                 candleService.connect(title!!, type) { list, isSnapshot ->
                     val list = list.reversed()
-                    println("Candles count ${localCandles.count()}")
                     if (!localCandles.isNullOrEmpty()) {
                         println(localCandles.first())
                         println(localCandles.last())
@@ -121,6 +123,8 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                     } else {
                         updateChart(list)
                     }
+                    println("Candles count ${localCandles.count()}")
+
                 }
             }
 
@@ -195,7 +199,6 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
     private fun drawChart(candles: List<Candle>) {
         entries.clear()
         val yValsCandleStick = candles.mapIndexed { index, candle ->
-
             val entry = convertToCandleEntry(candle, index.toFloat())
             entries.put(candle.index, entry)
             entry
@@ -213,14 +216,12 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
 
         val data = CandleData(set1)
         candleStickChart.data = data
-//        candleStickChart.fitScreen();
+        data.notifyDataChanged()
 
-//        candleStickChart.notifyDataSetChanged()
-//        candleStickChart.invalidate()
+        candleStickChart.notifyDataSetChanged()
+        candleStickChart.setVisibleXRange(0f, min(localCandles.count(), 30).toFloat())
+        candleStickChart.moveViewToX(data.entryCount.toFloat())
 
-        candleStickChart.setVisibleXRangeMaximum(30f)
-        val scrollTo = max(0.toFloat(), candles.count() - 30f)
-        candleStickChart.moveViewToX(scrollTo)
     }
 
     private fun addCandleChart() {
@@ -294,8 +295,10 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                 }
                 val candle = localCandles[value.toInt()]
                 val date = Date(candle.time)
-                var formatter = SimpleDateFormat("dd/MM/yyyy")
-                return formatter.format(date)
+                if (candleType == CandleType.YEAR) {
+                    return dateFormatter.format(date)
+                }
+                return dateTimeFormatter.format(date)
             }
         })
         val l = candleStickChart.legend
