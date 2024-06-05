@@ -36,6 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"/>
 
+
     <TextView
         android:id="@+id/chart_parameter_title"
         android:layout_width="wrap_content"
@@ -48,6 +49,20 @@
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/candle_type_title"
+        android:layout_width="wrap_content"
+        android:textColor="@color/white"
+        android:layout_height="30dp"
+        android:text="@string/candle_type"
+        android:textSize="15sp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="20dp"/>
     <Spinner
@@ -55,12 +70,11 @@
         android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_height="30dp"
-
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/chart_parameter_title"
+        app:layout_constraintStart_toEndOf="@+id/candle_type_title"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="19dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

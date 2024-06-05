@@ -11,11 +11,13 @@ import com.dxfeed.quotetableapp.adapters.PriceAdapter
 import com.dxfeed.quotetableapp.extensions.DividerItemDecoration
 
 
+
 class MarketDepthActivity : AppCompatActivity() {
     companion object {
         const val symbol = "symbol"
         const val address = "address"
         const val useWebSocket = "useWebSocket"
+        private const val orderItemHeight = 40f
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -38,12 +40,11 @@ class MarketDepthActivity : AppCompatActivity() {
             override fun onGlobalLayout() {
                 val otherViewHeight: Int = otherView.getHeight()
                 val scale: Float = applicationContext.getResources().getDisplayMetrics().density
-                println("on post event $otherViewHeight")
-                val defaultCellSize = 40f * scale + 0.5
-                val numberOfRows = (otherViewHeight / defaultCellSize) / 2
-                val cellSize = otherViewHeight / numberOfRows / 2
-                priceAdapter.setCellSize(cellSize.toFloat())
-                priceAdapter.setNumberOfItems(numberOfRows.toInt())
+                val defaultOrderHeight = orderItemHeight * scale + 0.5
+                val numberOfRows: Int = ((otherViewHeight / defaultOrderHeight) / 2).toInt()
+                val orderHeight = otherViewHeight / numberOfRows / 2
+                priceAdapter.setCellSize(orderHeight.toFloat())
+                priceAdapter.setNumberOfItems(numberOfRows)
             }
         })
         val symbolStr = intent.getStringExtra(CandleChartActivity.symbol)
@@ -54,8 +55,8 @@ class MarketDepthActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         priceAdapter = PriceAdapter(symbolStr!!,
-            intent.getStringExtra(MarketDepthActivity.address)!!,
-            intent.getBooleanExtra(MarketDepthActivity.useWebSocket, false))
+            intent.getStringExtra(address)!!,
+            intent.getBooleanExtra(useWebSocket, false))
         recyclerView.adapter = priceAdapter
 
         val dividerItemDecoration = DividerItemDecoration(this)

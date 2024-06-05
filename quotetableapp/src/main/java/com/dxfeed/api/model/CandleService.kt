@@ -1,5 +1,5 @@
 package com.dxfeed.api.model
-
+// it should be located in this specific package for using TimeSeriesTxModel
 import com.devexperts.util.TimeUtil
 import com.dxfeed.api.DXEndpoint
 import com.dxfeed.event.candle.Candle

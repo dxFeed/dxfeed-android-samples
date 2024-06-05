@@ -11,7 +11,8 @@
     <string name="quotes_title">Quote Table</string>
     <string name="symbols_title">Symbols</string>
     <string name="add_symbols_title">Add symbols</string>
-    <string name="chart_parameter_title">Candle Type</string>
+    <string name="chart_parameter_title">Chart parameters</string>
+    <string name="candle_type">Candle Type</string>
 
     <string name="candle_chart_menu">Candle Chart</string>
     <string name="market_depth_menu">Depth Of Market</string>

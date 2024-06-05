@@ -32,7 +32,9 @@ interface CandlesData {    // Not sure if this is correct
     fun getDate(xValue: Float?): Date
 }
 
+
 class CandleChartActivity : AppCompatActivity(), CandlesData {
+
     lateinit var pointIcon: Drawable
     lateinit var candleService: CandleService
     val entries = mutableMapOf<Long, Entry>()
@@ -46,6 +48,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         const val address = "address"
         const val useWebSocket = "useWebSocket"
         const val maxCount = 150
+        private const val maxVisibleCandlesOnScreen = 30
     }
 
     var localCandles = mutableListOf<Candle>()
@@ -222,7 +225,9 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         data.notifyDataChanged()
 
         candleStickChart.notifyDataSetChanged()
-        candleStickChart.setVisibleXRange(0f, min(localCandles.count(), 30).toFloat())
+        candleStickChart.setVisibleXRange(0f, min(localCandles.count(),
+            Companion.maxVisibleCandlesOnScreen
+        ).toFloat())
         candleStickChart.moveViewToX(data.entryCount.toFloat())
 
     }
