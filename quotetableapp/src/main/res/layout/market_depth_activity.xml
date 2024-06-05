@@ -18,12 +18,12 @@
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/white"
+        android:background="@color/background"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         android:padding="16dp" />
 
 </RelativeLayout>

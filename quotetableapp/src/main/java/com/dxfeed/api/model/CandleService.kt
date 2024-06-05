@@ -62,9 +62,6 @@ class CandleService(address: String, isWebSocket: Boolean) {
         }
         executorService.execute {
             candlesModel?.close()
-//            candlesModel.eventsList.addListener {
-//                eventsHandler(it.source.toList())
-//            }
             val candleSymbol = CandleSymbol.valueOf(symbol, period)
             builder.withSymbol(candleSymbol).withFromTime(startDate)
             builder.withExecutor(executorService)

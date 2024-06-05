@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent">
 
+        <com.dxfeed.quotetableapp.PartialBackgroundView
+            android:id="@+id/buy_partial_background_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <TextView
-            android:id="@+id/bidPrice"
-            android:text="asdjashd"
+            android:id="@+id/buySize"
             android:gravity="center_vertical|left"
 
             android:layout_width="match_parent"
@@ -23,8 +30,7 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_weight="1"
-
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <TextView
             android:id="@+id/price"
             android:layout_width="match_parent"
@@ -39,13 +45,20 @@
 
     </RelativeLayout>
 
+
+
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:layout_height="match_parent">
 
-        android:layout_height="wrap_content">
+        <com.dxfeed.quotetableapp.PartialBackgroundView
+            android:id="@+id/sell_partial_background_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <TextView
-            android:id="@+id/askPrice"
+            android:id="@+id/sellSize"
 
             android:gravity="center_vertical|right"
 
@@ -58,8 +71,6 @@
 
     </RelativeLayout>
 
-
-
-
-
 </LinearLayout>
+
+

@@ -2,14 +2,13 @@ package com.dxfeed.quotetableapp
 
 import android.os.Bundle
 import android.view.View
-import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dxfeed.quotetableapp.adapters.PriceAdapter
-import com.dxfeed.quotetableapp.adapters.PriceItem
+import com.dxfeed.quotetableapp.extensions.DividerItemDecoration
 
 
 class MarketDepthActivity : AppCompatActivity() {
@@ -21,8 +20,11 @@ class MarketDepthActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var priceAdapter: PriceAdapter
-    private lateinit var priceList: MutableList<PriceItem>
 
+    override fun onDestroy() {
+        super.onDestroy()
+        priceAdapter.close()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,60 +34,32 @@ class MarketDepthActivity : AppCompatActivity() {
         val otherView = findViewById<View>(R.id.recyclerView)
         otherView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
 
-        otherView.addOnLayoutChangeListener(object: OnLayoutChangeListener {
-            override fun onLayoutChange(
-                var1: View?,
-                var2: Int,
-                var3: Int,
-                var4: Int,
-                var5: Int,
-                var6: Int,
-                var7: Int,
-                var8: Int,
-                var9: Int
-            ) {
-                val otherViewHeight = otherView.height
-                val defaultCellSize = 50f
+        otherView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val otherViewHeight: Int = otherView.getHeight()
+                val scale: Float = applicationContext.getResources().getDisplayMetrics().density
+                println("on post event $otherViewHeight")
+                val defaultCellSize = 40f * scale + 0.5
                 val numberOfRows = (otherViewHeight / defaultCellSize) / 2
                 val cellSize = otherViewHeight / numberOfRows / 2
-                priceAdapter.setCellSize(cellSize)
+                priceAdapter.setCellSize(cellSize.toFloat())
                 priceAdapter.setNumberOfItems(numberOfRows.toInt())
             }
         })
-
-
-        val title = intent.getStringExtra(CandleChartActivity.symbol)
+        val symbolStr = intent.getStringExtra(CandleChartActivity.symbol)
         val symbolTitle = findViewById<TextView>(R.id.title)
-        symbolTitle.text = title
+        symbolTitle.text = symbolStr
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        priceList = mutableListOf()
-        // Add sample data to the list
-        priceList.add(PriceItem("0.1254", "3763.62", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-        priceList.add(PriceItem("0.1254", "3763.62123123", "0.1594"))
-
-        // ... add more items
-        val scale: Float = this.getResources().getDisplayMetrics().density
-
-        priceAdapter = PriceAdapter(priceList, symbol,
+        priceAdapter = PriceAdapter(symbolStr!!,
             intent.getStringExtra(MarketDepthActivity.address)!!,
             intent.getBooleanExtra(MarketDepthActivity.useWebSocket, false))
         recyclerView.adapter = priceAdapter
 
+        val dividerItemDecoration = DividerItemDecoration(this)
+        recyclerView.addItemDecoration(dividerItemDecoration)
 
     }
-
-
 }
