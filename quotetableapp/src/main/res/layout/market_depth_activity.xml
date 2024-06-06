@@ -12,18 +12,56 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text=""
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/items_title"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/buyTitle"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="0dp"
+            android:text="@string/buy_title"
+            android:layout_height="match_parent"
+            android:textColor="@color/green"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/priceTitle"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="0dp"
+            android:text="@string/price_title"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/sellTitle"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="0dp"
+            android:text="@string/sell_title"
+            android:layout_height="match_parent"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:background="@color/background"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/title"
-        android:layout_marginTop="0dp"
-        android:padding="16dp" />
+        android:layout_below="@id/items_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
 </RelativeLayout>

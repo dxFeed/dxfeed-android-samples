@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-
 class PartialBackgroundView : View {
     private var paint: Paint? = null
     private var fillPercentage = 0f
@@ -29,20 +28,27 @@ class PartialBackgroundView : View {
     }
 
     private fun init() {
-        paint = Paint()
-        paint!!.color = 0
+        paint = Paint().apply {
+            color = 0
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        val width = width
-        if (startFromEnd) {
+        paint?.let { paint ->
+            val width = width
             val fillWidth = (width * fillPercentage).toInt()
-            canvas.drawRect((width - fillWidth).toFloat(), 0f, width.toFloat(), height.toFloat(), paint!!)
-        } else {
-            val fillWidth = (width * fillPercentage).toInt()
-            canvas.drawRect(0f, 0f, fillWidth.toFloat(), height.toFloat(), paint!!)
+            if (startFromEnd) {
+                canvas.drawRect(
+                    (width - fillWidth).toFloat(),
+                    0f,
+                    width.toFloat(),
+                    height.toFloat(),
+                    paint
+                )
+            } else {
+                canvas.drawRect(0f, 0f, fillWidth.toFloat(), height.toFloat(), paint)
+            }
         }
     }
 
@@ -51,7 +57,7 @@ class PartialBackgroundView : View {
     }
 
     fun setFillPercentage(percentage: Float, startFromEnd: Boolean) {
-        fillPercentage = percentage
+        this.fillPercentage = percentage
         this.startFromEnd = startFromEnd
         invalidate()
     }

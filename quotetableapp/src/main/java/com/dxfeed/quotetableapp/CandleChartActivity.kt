@@ -233,45 +233,6 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
     }
 
     private fun addCandleChart() {
-//        candleStickChart.onChartGestureListener = object : OnChartGestureListener {
-//            override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
-//                println("onChartGestureStart")
-//            }
-//
-//            override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
-//                println("onChartGestureEnd")
-//            }
-//
-//            override fun onChartLongPressed(me: MotionEvent?) {
-//                println("onChartLongPressed")
-//            }
-//
-//            override fun onChartDoubleTapped(me: MotionEvent?) {
-//                println("onChartDoubleTapped")
-//            }
-//
-//            override fun onChartSingleTapped(me: MotionEvent?) {
-//                println("onChartSingleTapped")
-//            }
-//
-//            override fun onChartFling(
-//                me1: MotionEvent?,
-//                me2: MotionEvent?,
-//                velocityX: Float,
-//                velocityY: Float
-//            ) {
-//                println("onChartFling")
-//            }
-//
-//            override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
-//                println("onChartScale")
-//            }
-//
-//            override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
-//                println("onChartTranslate")
-//            }
-//        }
-
         candleStickChart.setNoDataText("")
         candleStickChart.description.text = ""
         candleStickChart.isHighlightPerDragEnabled = true
@@ -296,7 +257,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         xAxis.textColor = ContextCompat.getColor(this, R.color.white)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.labelCount = 4
-        xAxis.setValueFormatter(object : IndexAxisValueFormatter() {
+        xAxis.valueFormatter = object : IndexAxisValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 if (value >= localCandles.count().toFloat()) {
                     return ""
@@ -310,7 +271,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                 }
                 return dateFormatter.format(date)
             }
-        })
+        }
         val l = candleStickChart.legend
         l.isEnabled = false
 

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dxfeed.quotetableapp.adapters.PriceAdapter
+import com.dxfeed.quotetableapp.adapters.MarketDepthAdapter
 import com.dxfeed.quotetableapp.extensions.DividerItemDecoration
 
 
@@ -21,11 +21,11 @@ class MarketDepthActivity : AppCompatActivity() {
     }
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var priceAdapter: PriceAdapter
+    private lateinit var marketDepthAdapter: MarketDepthAdapter
 
     override fun onDestroy() {
         super.onDestroy()
-        priceAdapter.close()
+        marketDepthAdapter.close()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,34 +33,27 @@ class MarketDepthActivity : AppCompatActivity() {
         setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
         setContentView(R.layout.market_depth_activity)
 
-        val otherView = findViewById<View>(R.id.recyclerView)
-        otherView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-
-        otherView.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val otherViewHeight: Int = otherView.getHeight()
-                val scale: Float = applicationContext.getResources().getDisplayMetrics().density
-                val defaultOrderHeight = orderItemHeight * scale + 0.5
-                val numberOfRows: Int = ((otherViewHeight / defaultOrderHeight) / 2).toInt()
-                val orderHeight = otherViewHeight / numberOfRows / 2
-                priceAdapter.setCellSize(orderHeight.toFloat())
-                priceAdapter.setNumberOfItems(numberOfRows)
-            }
-        })
         val symbolStr = intent.getStringExtra(CandleChartActivity.symbol)
         val symbolTitle = findViewById<TextView>(R.id.title)
         symbolTitle.text = symbolStr
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        priceAdapter = PriceAdapter(symbolStr!!,
+        marketDepthAdapter = MarketDepthAdapter(symbolStr!!,
             intent.getStringExtra(address)!!,
             intent.getBooleanExtra(useWebSocket, false))
-        recyclerView.adapter = priceAdapter
-
+        recyclerView.adapter = marketDepthAdapter
         val dividerItemDecoration = DividerItemDecoration(this)
         recyclerView.addItemDecoration(dividerItemDecoration)
 
+        recyclerView.viewTreeObserver.addOnGlobalLayoutListener {
+            val otherViewHeight: Int = recyclerView.height
+            val scale: Float = applicationContext.resources.displayMetrics.density
+            val defaultOrderHeight = orderItemHeight * scale + 0.5
+            val numberOfRows: Int = ((otherViewHeight / defaultOrderHeight) / 2).toInt()
+            val orderHeight = otherViewHeight / numberOfRows / 2
+            marketDepthAdapter.setCellSize(orderHeight.toFloat())
+            marketDepthAdapter.setNumberOfItems(numberOfRows)
+        }
     }
 }

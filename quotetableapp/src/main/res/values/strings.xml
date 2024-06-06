@@ -14,6 +14,10 @@
     <string name="chart_parameter_title">Chart parameters</string>
     <string name="candle_type">Candle Type</string>
 
+    <string name="buy_title">Buy</string>
+    <string name="price_title">Price</string>
+    <string name="sell_title">Sell</string>
+
     <string name="candle_chart_menu">Candle Chart</string>
     <string name="market_depth_menu">Depth Of Market</string>
 

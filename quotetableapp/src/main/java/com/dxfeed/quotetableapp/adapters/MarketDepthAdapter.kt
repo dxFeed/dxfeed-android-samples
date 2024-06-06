@@ -20,19 +20,16 @@ import java.lang.Double.max
 import java.text.DecimalFormat
 import java.util.concurrent.Executors
 
-class PriceAdapter(symbol: String,
-                   address: String,
-                   isWebSocket: Boolean) : RecyclerView.Adapter<PriceAdapter.ViewHolder>() {
+class MarketDepthAdapter(symbol: String,
+                         address: String,
+                         isWebSocket: Boolean) : RecyclerView.Adapter<MarketDepthAdapter.ViewHolder>() {
     var orderBook: MarketDepthModel<Order>? = null
     val endpoint = DXEndpoint.create(DXEndpoint.Role.FEED)
 
     private var size: Float = 100f
-    private var numberOfItems: Int = 0
+    private var dataSource = mutableListOf<OrderModel>()
 
-    private var buyOrders = listOf<Order>()
-    private var sellOrders = listOf<Order>()
     private var maxSize = 0.0
-
 
     init {
         if (isWebSocket) {
@@ -40,21 +37,17 @@ class PriceAdapter(symbol: String,
             System.setProperty("dxfeed.experimental.dxlink.enable", "true")
             System.setProperty("scheme", "ext:opt:sysprops,resource:dxlink.xml")
         }
-        endpoint.addStateChangeListener {
-            println("Change state ${it.newValue}")
-        }
-
         endpoint?.connect(address)
-
         this.orderBook = MarketDepthModel.newBuilder(Order::class.java)
-            .withListener {
-                buyOrders = it.buyOrders
-                sellOrders = it.sellOrders
+            .withListener { book ->
+                dataSource.clear()
                 var maxValue = 0.0
-                buyOrders.forEach {
+                book.sellOrders.forEach {
+                    dataSource.add(OrderModel(it, false))
                     maxValue = max(maxValue, it.sizeAsDouble)
                 }
-                sellOrders.forEach {
+                book.buyOrders.forEach {
+                    dataSource.add(OrderModel(it, true))
                     maxValue = max(maxValue, it.sizeAsDouble)
                 }
                 maxSize = maxValue
@@ -65,7 +58,7 @@ class PriceAdapter(symbol: String,
             .withFeed(endpoint.feed)
             .withSources(listOf(OrderSource.AGGREGATE_ASK, OrderSource.AGGREGATE_BID))
             .withSymbol(symbol)
-            .withDepthLimit(2)
+            .withDepthLimit(3)
             .withExecutor(Executors.newSingleThreadScheduledExecutor())
             .build()
     }
@@ -78,34 +71,26 @@ class PriceAdapter(symbol: String,
     }
 
     fun setNumberOfItems(items: Int) {
-       this.numberOfItems = items
         orderBook?.depthLimit = items
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_price, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.dom_order_item, parent, false)
         return ViewHolder(view).apply {
             view.layoutParams.height = size.toInt()
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val isBuy = position >= sellOrders.count()
-        var order = if (position < sellOrders.count()) sellOrders[position] else buyOrders[position - sellOrders.count()]
-        holder.bindOrder(order, isBuy, maxSize)
+        var model = dataSource[position]
+        holder.bindOrder(model, maxSize)
     }
 
     override fun getItemCount(): Int {
-        return sellOrders.count() + buyOrders.count()
+        return dataSource.count()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        companion object {
-            private val df = DecimalFormat().also {
-                it.maximumFractionDigits = 4
-                it.isGroupingUsed = false
-            }
-
-        }
         private val buyBackground = itemView.findViewById<PartialBackgroundView>(R.id.buy_partial_background_view).apply {
             setColor(ColorUtils.setAlphaComponent( ContextCompat.getColor(context, R.color.green), 0x4c))
         }
@@ -116,22 +101,23 @@ class PriceAdapter(symbol: String,
         private val price = itemView.findViewById<TextView>(R.id.price)
         private val sellSize = itemView.findViewById<TextView>(R.id.sellSize)
 
-        fun bindOrder(order: Order, isBuy: Boolean, maxSize: Double) {
-            val size = df.format(order.sizeAsDouble)
+        fun bindOrder(model: OrderModel, maxSize: Double) {
+            val size = model.sizeString
+            val isBuy = model.isBuy
             buySize.text = size
             sellSize.text = size
-            price.text = df.format(order.price)
+            price.text = model.priceString
 
             buySize.isVisible = isBuy
             sellSize.isVisible = !isBuy
 
             buyBackground.setFillPercentage(
-                (order.sizeAsDouble/ maxSize).toFloat(),
+                (model.size/ maxSize).toFloat(),
                 !isBuy
             )
             buyBackground.isVisible = isBuy
             sellBackground.setFillPercentage(
-                (order.sizeAsDouble/ maxSize).toFloat(),
+                (model.size/ maxSize).toFloat(),
                 !isBuy
             )
             sellBackground.isVisible = !isBuy
