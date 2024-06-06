@@ -61,6 +61,10 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
         setContentView(R.layout.candle_chart_activity)
 
+        findViewById<TextView>(R.id.notice_text).let {
+            it.text = getString(R.string.candle_notice_title).format(maxCount)
+        }
+
         candleStickChart = findViewById(R.id.candle_stick_chart)
         val drawable =
             ContextCompat.getDrawable(this, android.R.drawable.radiobutton_off_background)
@@ -210,10 +214,6 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         }
 
         val set1 = CandleDataSet(yValsCandleStick, "DataSet 1")
-
-        set1.shadowColor = ContextCompat.getColor(this, R.color.priceBackground)
-        set1.shadowWidth = 0.8f
-
         set1.decreasingColor = ContextCompat.getColor(this, R.color.red)
         set1.decreasingPaintStyle = Paint.Style.FILL
         set1.increasingColor = ContextCompat.getColor(this, R.color.green)
@@ -226,7 +226,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
 
         candleStickChart.notifyDataSetChanged()
         candleStickChart.setVisibleXRange(0f, min(localCandles.count(),
-            Companion.maxVisibleCandlesOnScreen
+            maxVisibleCandlesOnScreen
         ).toFloat())
         candleStickChart.moveViewToX(data.entryCount.toFloat())
 
@@ -243,14 +243,18 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         val yAxis = candleStickChart.axisLeft
         yAxis.setDrawGridLines(true)
         yAxis.setDrawLabels(false)
+        yAxis.setDrawAxisLine(false)
 
         val rightAxis = candleStickChart.axisRight
         rightAxis.textColor = ContextCompat.getColor(this, R.color.white)
-        rightAxis.setDrawGridLines(false)
+        rightAxis.setDrawGridLines(true)
+        rightAxis.setDrawAxisLine(false)
+
         candleStickChart.requestDisallowInterceptTouchEvent(true)
 
         val xAxis = candleStickChart.xAxis
         xAxis.setDrawGridLines(true)
+        xAxis.setDrawAxisLine(false)
         xAxis.setDrawLabels(true)
         xAxis.isGranularityEnabled = false
         xAxis.setAvoidFirstLastClipping(true)
@@ -278,6 +282,8 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         val mv = CustomMarkerView(this, R.layout.marker_view).apply {
             chartView = candleStickChart
         }
+        candleStickChart.setBackgroundColor(ContextCompat.getColor(this, R.color.cellBackground))
+        candleStickChart.setBorderColor(ContextCompat.getColor(this, R.color.cellBackground))
         candleStickChart.marker = mv
         candleStickChart.isHighlightPerTapEnabled = true
     }
