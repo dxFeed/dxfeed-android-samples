@@ -56,7 +56,6 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         super.onDestroy()
         candleService.close()
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
@@ -118,19 +117,13 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                 candleStickChart.highlightValue(null)
                 candleStickChart.clear()
                 candleService.connect(title!!, type) { list, isSnapshot ->
-                    val list = list.reversed()
-                    if (!localCandles.isNullOrEmpty()) {
-                        println(localCandles.first())
-                        println(localCandles.last())
-                    }
+
                     if (isSnapshot) {
-                        localCandles = list.takeLast(maxCount).toMutableList()
+                        localCandles = list.take(maxCount).reversed().toMutableList()
                         drawChart(localCandles)
                     } else {
                         updateChart(list)
                     }
-                    println("Candles count ${localCandles.count()}")
-
                 }
             }
 
@@ -142,13 +135,18 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
     }
 
     private fun updateChart(candles: List<Candle>) {
+        var needUpdateUi = false
         candles.forEach {
             if ((it.eventFlags and IndexedEvent.REMOVE_EVENT) != 0) {
                 // remove
                 localCandles.removeIf { toRemove ->
                     toRemove.index == it.index
                 }
-                entries.remove(it.index)
+                val entry = entries.remove(it.index)
+                if (entry != null) {
+                    candleStickChart.data.removeEntry(entry, 0)
+                }
+                needUpdateUi = true
             } else {
                 // update
                 val entry = entries.get(it.index)
@@ -164,20 +162,21 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                     entries[it.index] = newEntry
                     candleStickChart.data.removeEntry(entry, 0)
                     candleStickChart.data.addEntry(newEntry, 0)
-                    candleStickChart.data.notifyDataChanged()
-                    candleStickChart.notifyDataSetChanged(); // let the chart know it's data changed
-                    candleStickChart.invalidate();
+                    needUpdateUi = true
                 } else {
                     // insert
                     val newEntry = convertToCandleEntry(it, entries.count().toFloat())
                     localCandles.add(it)
                     entries[it.index] = newEntry
                     candleStickChart.data.addEntry(newEntry, 0)
-                    candleStickChart.data.notifyDataChanged()
-                    candleStickChart.notifyDataSetChanged(); // let the chart know it's data changed
-                    candleStickChart.invalidate();
+                    needUpdateUi = true
                 }
             }
+        }
+        if (needUpdateUi) {
+            candleStickChart.data.notifyDataChanged()
+            candleStickChart.notifyDataSetChanged(); // let the chart know it's data changed
+            candleStickChart.invalidate();
         }
     }
     private fun convertToCandleEntry(candle: Candle, index: Float): CandleEntry {
@@ -209,6 +208,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
             entries.put(candle.index, entry)
             entry
         }
+
         val set1 = CandleDataSet(yValsCandleStick, "DataSet 1")
 
         set1.shadowColor = ContextCompat.getColor(this, R.color.priceBackground)
@@ -280,7 +280,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
 
         candleStickChart.setDrawBorders(true)
         val yAxis = candleStickChart.axisLeft
-        yAxis.setDrawGridLines(false)
+        yAxis.setDrawGridLines(true)
         yAxis.setDrawLabels(false)
 
         val rightAxis = candleStickChart.axisRight
@@ -289,7 +289,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         candleStickChart.requestDisallowInterceptTouchEvent(true)
 
         val xAxis = candleStickChart.xAxis
-        xAxis.setDrawGridLines(false) // disable x axis grid lines
+        xAxis.setDrawGridLines(true)
         xAxis.setDrawLabels(true)
         xAxis.isGranularityEnabled = false
         xAxis.setAvoidFirstLastClipping(true)
