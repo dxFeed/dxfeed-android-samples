@@ -17,7 +17,7 @@
     <string name="buy_title">Buy</string>
     <string name="price_title">Price</string>
     <string name="sell_title">Sell</string>
-    <string name="candle_notice_title">NOTICE: only the last %d candles are displayed</string>
+    <string name="candle_notice_title">NOTICE: A maximum of %d candles is displayed.</string>
 
 
     <string name="candle_chart_menu">Candle Chart</string>

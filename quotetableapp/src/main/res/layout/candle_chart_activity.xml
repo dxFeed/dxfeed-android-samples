@@ -48,6 +48,7 @@
         android:background="@color/cellBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="15dp"
         android:layout_marginBottom="80dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
