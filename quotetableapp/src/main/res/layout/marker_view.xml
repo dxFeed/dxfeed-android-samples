@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/marker_background"
 
@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:paddingBottom="16dp"
         android:text="X123123.123123"
-        android:textSize="12dp"
+        android:textSize="14dp"
         android:textColor="@android:color/white"
         />
 
@@ -32,7 +32,7 @@
 
         android:layout_centerHorizontal="true"
         android:text="Open"
-        android:textSize="12dp"
+        android:textSize="14dp"
         android:textColor="@android:color/white"
         android:ellipsize="end"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -44,7 +44,7 @@
 
         android:layout_centerHorizontal="true"
         android:text="Close"
-        android:textSize="12dp"
+        android:textSize="14dp"
         android:textColor="@android:color/white"
         android:ellipsize="end"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -57,7 +57,7 @@
 
             android:layout_centerHorizontal="true"
             android:text="Open"
-            android:textSize="12dp"
+            android:textSize="14dp"
             android:textColor="@android:color/white"
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -69,7 +69,7 @@
 
             android:layout_centerHorizontal="true"
             android:text="Close"
-            android:textSize="12dp"
+            android:textSize="14dp"
             android:textColor="@android:color/white"
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceSmall" />

@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -24,6 +25,8 @@ import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -61,9 +64,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         setTheme(R.style.Theme_DXFeedSimpleAndroidApps)
         setContentView(R.layout.candle_chart_activity)
 
-        findViewById<TextView>(R.id.notice_text).let {
-            it.text = getString(R.string.candle_notice_title).format(maxCount)
-        }
+        findViewById<TextView>(R.id.notice_text).text = getString(R.string.candle_notice_title).format(maxCount)
 
         candleStickChart = findViewById(R.id.candle_stick_chart)
         val drawable =
@@ -219,6 +220,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         set1.increasingColor = ContextCompat.getColor(this, R.color.green)
         set1.increasingPaintStyle = Paint.Style.FILL
         set1.setDrawValues(false)
+        set1.setDrawHorizontalHighlightIndicator(false)
 
         val data = CandleData(set1)
         candleStickChart.data = data
@@ -229,7 +231,6 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
             maxVisibleCandlesOnScreen
         ).toFloat())
         candleStickChart.moveViewToX(data.entryCount.toFloat())
-
     }
 
     private fun addCandleChart() {
@@ -286,6 +287,47 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         candleStickChart.setBorderColor(ContextCompat.getColor(this, R.color.cellBackground))
         candleStickChart.marker = mv
         candleStickChart.isHighlightPerTapEnabled = true
+
+        candleStickChart.onChartGestureListener = object : OnChartGestureListener {
+            override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+                println("onChartGestureStart")
+            }
+
+            override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+                println("onChartGestureEnd")
+            }
+
+            override fun onChartLongPressed(me: MotionEvent?) {
+                println("onChartLongPressed")
+            }
+
+            override fun onChartDoubleTapped(me: MotionEvent?) {
+                println("onChartDoubleTapped")
+            }
+
+            override fun onChartSingleTapped(me: MotionEvent?) {
+                println("onChartSingleTapped")
+            }
+
+            override fun onChartFling(
+                me1: MotionEvent?,
+                me2: MotionEvent?,
+                velocityX: Float,
+                velocityY: Float
+            ) {
+                println("onChartFling")
+            }
+
+            override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
+                println("onChartScale")
+            }
+
+            override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
+                candleStickChart.highlightValue(null)
+                println("onChartTranslate")
+            }
+        }
+
     }
 
     override fun getDate(xValue: Float?): Date {

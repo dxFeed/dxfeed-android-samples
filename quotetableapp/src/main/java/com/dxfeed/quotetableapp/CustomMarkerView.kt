@@ -1,6 +1,7 @@
 package com.dxfeed.quotetableapp
 
 import android.content.Context
+import android.graphics.Canvas
 import android.widget.TextView
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.CandleEntry
@@ -17,13 +18,8 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
     private val highText: TextView = findViewById(R.id.highContent)
     private val lowText: TextView = findViewById(R.id.lowContent)
     private val dateText: TextView = findViewById(R.id.dateContent)
-    private val dateFormater = SimpleDateFormat()
-    init {
-                // this markerview only displays a textview
-    }
+    private val dateFormatter = SimpleDateFormat()
 
-    // callbacks everytime the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         super.refreshContent(e, highlight)
 
@@ -36,7 +32,11 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
 
         (context1 as? CandlesData)?.let {
             val date = it.getDate(e?.x)
-            dateText.text =  dateFormater.format(date)
+            dateText.text =  dateFormatter.format(date)
         }
+    }
+
+    override fun getOffsetForDrawingAtPoint(posX: Float, posY: Float): MPPointF {
+        return MPPointF(-posX + getResources().getDisplayMetrics().widthPixels/2 - width/2, -posY + 10)
     }
 }
