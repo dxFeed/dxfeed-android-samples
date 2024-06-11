@@ -39,16 +39,16 @@ class CandleService(address: String, isWebSocket: Boolean) {
         val period = CandlePeriod.valueOf(1.0, type)
         val startDate = when (type) {
             CandleType.MINUTE -> {
-                System.currentTimeMillis() - 30 * TimeUtil.DAY
+                System.currentTimeMillis() - 7 * TimeUtil.DAY
             }
             CandleType.HOUR -> {
-                System.currentTimeMillis() - 30 * TimeUtil.DAY
+                System.currentTimeMillis() - 7 * TimeUtil.DAY
             }
             CandleType.DAY -> {
                 System.currentTimeMillis() - 365 * TimeUtil.DAY
             }
             CandleType.WEEK -> {
-                System.currentTimeMillis() - 5 * 365 * TimeUtil.DAY
+                System.currentTimeMillis() - 4 * 365 * TimeUtil.DAY
             }
             CandleType.MONTH -> {
                 System.currentTimeMillis() - 10 * 365 * TimeUtil.DAY
