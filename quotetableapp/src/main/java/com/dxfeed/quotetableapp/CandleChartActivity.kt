@@ -283,6 +283,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         val mv = CustomMarkerView(this, R.layout.marker_view).apply {
             chartView = candleStickChart
         }
+
         candleStickChart.setBackgroundColor(ContextCompat.getColor(this, R.color.cellBackground))
         candleStickChart.setBorderColor(ContextCompat.getColor(this, R.color.cellBackground))
         candleStickChart.marker = mv
@@ -295,6 +296,25 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
 
             override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
                 println("onChartGestureEnd")
+                val x = me?.rawX ?: 0f
+                val y = me?.rawY ?: 0f
+                println("onChartSingleTapped $x $y")
+
+                mv.let { view ->
+                    val location = IntArray(2)
+                    view.getLocationOnScreen(location)
+
+                    val viewX = view.drawingPosX + candleStickChart.x
+                    val viewY = view.drawingPosY + candleStickChart.y
+                    val viewWidth = view.width
+                    val viewHeight = view.height
+                    println("Marker $viewX $viewY $viewWidth $viewHeight")
+                    if (x >= viewX && x <= viewX + viewWidth && y >= viewY && y <= viewY + viewHeight) {
+                        candleStickChart.highlightValue(null)
+                        println("HIDE!")
+                    }
+                }
+
             }
 
             override fun onChartLongPressed(me: MotionEvent?) {
@@ -306,7 +326,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
             }
 
             override fun onChartSingleTapped(me: MotionEvent?) {
-                println("onChartSingleTapped")
+
             }
 
             override fun onChartFling(

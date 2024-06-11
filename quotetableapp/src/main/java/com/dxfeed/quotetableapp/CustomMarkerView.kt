@@ -19,7 +19,8 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
     private val lowText: TextView = findViewById(R.id.lowContent)
     private val dateText: TextView = findViewById(R.id.dateContent)
     private val dateFormatter = SimpleDateFormat()
-
+    var drawingPosX: Float = 0f
+    var drawingPosY: Float = 0f
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         super.refreshContent(e, highlight)
 
@@ -35,8 +36,15 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
             dateText.text =  dateFormatter.format(date)
         }
     }
+    override fun draw(canvas: Canvas?, posX: Float, posY: Float) {
+        super.draw(canvas, posX, posY)
+        val offset = getOffsetForDrawingAtPoint(posX, posY)
+        this.drawingPosX = posX + offset.x
+        this.drawingPosY = posY + offset.y
+    }
 
     override fun getOffsetForDrawingAtPoint(posX: Float, posY: Float): MPPointF {
         return MPPointF(-posX + getResources().getDisplayMetrics().widthPixels/2 - width/2, -posY + 10)
     }
+
 }
