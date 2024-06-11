@@ -8,11 +8,18 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 
 class CustomMarkerView(val context1: Context?, layoutResource: Int) :
     MarkerView(context1, layoutResource) {
+    companion object {
+        private val df = DecimalFormat().also {
+            it.maximumFractionDigits = 4
+            it.isGroupingUsed = false
+        }
+    }
     private val openText: TextView = findViewById(R.id.openContent)
     private val closeText: TextView = findViewById(R.id.closeContent)
     private val highText: TextView = findViewById(R.id.highContent)
@@ -23,10 +30,10 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
     var drawingPosY: Float = 0f
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         (e as? CandleEntry)?.let {
-            openText.text = "Open: ${it.open}"
-            closeText.text = "Close: ${it.close}"
-            highText.text = "High: ${it.high}"
-            lowText.text = "Low: ${it.low}"
+            openText.text = "Open: ${df.format(it.open)}"
+            closeText.text = "Close: ${df.format(it.close)}"
+            highText.text = "High: ${df.format(it.high)}"
+            lowText.text = "Low: ${df.format(it.low)}"
         }
 
         (context1 as? CandlesData)?.let {
