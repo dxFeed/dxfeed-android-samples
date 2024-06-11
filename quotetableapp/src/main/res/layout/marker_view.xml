@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:paddingBottom="16dp"
         android:text="X123123.123123"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textColor="@android:color/white"
         />
 
@@ -30,7 +30,7 @@
         android:layout_columnWeight="1"
         android:layout_margin="8dp"
         android:layout_centerHorizontal="true"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textColor="@android:color/white"
         android:ellipsize="end"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -40,7 +40,7 @@
         android:layout_columnWeight="1"
         android:layout_margin="8dp"
         android:layout_centerHorizontal="true"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textColor="@android:color/white"
         android:ellipsize="end"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -51,7 +51,7 @@
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
             android:layout_centerHorizontal="true"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textColor="@android:color/white"
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -61,7 +61,7 @@
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
             android:layout_centerHorizontal="true"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textColor="@android:color/white"
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceSmall" />
