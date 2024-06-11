@@ -22,8 +22,6 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
     var drawingPosX: Float = 0f
     var drawingPosY: Float = 0f
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        super.refreshContent(e, highlight)
-
         (e as? CandleEntry)?.let {
             openText.text = "Open: ${it.open}"
             closeText.text = "Close: ${it.close}"
@@ -35,6 +33,8 @@ class CustomMarkerView(val context1: Context?, layoutResource: Int) :
             val date = it.getDate(e?.x)
             dateText.text =  dateFormatter.format(date)
         }
+        super.refreshContent(e, highlight)
+
     }
     override fun draw(canvas: Canvas?, posX: Float, posY: Float) {
         super.draw(canvas, posX, posY)

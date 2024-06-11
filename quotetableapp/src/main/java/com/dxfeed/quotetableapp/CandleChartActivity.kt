@@ -40,7 +40,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
 
     lateinit var pointIcon: Drawable
     lateinit var candleService: CandleService
-    val entries = mutableMapOf<Long, Entry>()
+    private val entries = mutableMapOf<Long, Entry>()
     lateinit var candleStickChart: CandleStickChart
     val yearDateFormatter = SimpleDateFormat("MM.yyyy")
     val dateFormatter = SimpleDateFormat("dd.MM.yy")
@@ -308,10 +308,8 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                     val viewY = view.drawingPosY + candleStickChart.y
                     val viewWidth = view.width
                     val viewHeight = view.height
-                    println("Marker $viewX $viewY $viewWidth $viewHeight")
                     if (x >= viewX && x <= viewX + viewWidth && y >= viewY && y <= viewY + viewHeight) {
                         candleStickChart.highlightValue(null)
-                        println("HIDE!")
                     }
                 }
 
