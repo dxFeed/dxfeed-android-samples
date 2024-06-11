@@ -1,6 +1,7 @@
 package com.dxfeed.quotetableapp
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -215,10 +216,12 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
         }
 
         val set1 = CandleDataSet(yValsCandleStick, "DataSet 1")
+        set1.shadowColor = ContextCompat.getColor(this, R.color.priceBackground)
         set1.decreasingColor = ContextCompat.getColor(this, R.color.red)
         set1.decreasingPaintStyle = Paint.Style.FILL
         set1.increasingColor = ContextCompat.getColor(this, R.color.green)
         set1.increasingPaintStyle = Paint.Style.FILL
+
         set1.setDrawValues(false)
         set1.setDrawHorizontalHighlightIndicator(false)
 
