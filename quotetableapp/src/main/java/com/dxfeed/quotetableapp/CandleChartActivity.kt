@@ -293,15 +293,11 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
 
         candleStickChart.onChartGestureListener = object : OnChartGestureListener {
             override fun onChartGestureStart(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
-                println("onChartGestureStart")
             }
 
             override fun onChartGestureEnd(me: MotionEvent?, lastPerformedGesture: ChartTouchListener.ChartGesture?) {
-                println("onChartGestureEnd")
                 val x = me?.rawX ?: 0f
                 val y = me?.rawY ?: 0f
-                println("onChartSingleTapped $x $y")
-
                 mv.let { view ->
                     val location = IntArray(2)
                     view.getLocationOnScreen(location)
@@ -314,19 +310,15 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                         candleStickChart.highlightValue(null)
                     }
                 }
-
             }
 
             override fun onChartLongPressed(me: MotionEvent?) {
-                println("onChartLongPressed")
             }
 
             override fun onChartDoubleTapped(me: MotionEvent?) {
-                println("onChartDoubleTapped")
             }
 
             override fun onChartSingleTapped(me: MotionEvent?) {
-
             }
 
             override fun onChartFling(
@@ -335,16 +327,13 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                 velocityX: Float,
                 velocityY: Float
             ) {
-                println("onChartFling")
             }
 
             override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
-                println("onChartScale")
             }
 
             override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
                 candleStickChart.highlightValue(null)
-                println("onChartTranslate")
             }
         }
 
