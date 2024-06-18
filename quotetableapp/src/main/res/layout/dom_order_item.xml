@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <com.dxfeed.quotetableapp.PartialBackgroundView
+            android:id="@+id/buy_partial_background_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/buySize"
+            android:gravity="center_vertical|left"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="16sp" />
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <com.dxfeed.quotetableapp.PartialBackgroundView
+            android:id="@+id/sell_partial_background_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/sellSize"
+
+            android:gravity="center_vertical|right"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/red"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+

@@ -41,7 +41,9 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:layout_weight="0.5"
-				android:enabled="false"
+				android:enabled="true"
+				app:strokeWidth="0dp"
+
 				android:hint="@string/bid_hint"
 				android:insetRight="3dp"
 				android:paddingLeft="0dp"
@@ -58,7 +60,9 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:layout_weight="0.5"
-				android:enabled="false"
+				android:enabled="true"
+				app:strokeWidth="0dp"
+
 				android:hint="@string/ask_hint"
 				android:paddingLeft="0dp"
 				android:paddingRight="0dp"

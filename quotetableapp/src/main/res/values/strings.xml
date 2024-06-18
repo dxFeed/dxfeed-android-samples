@@ -11,10 +11,28 @@
     <string name="quotes_title">Quote Table</string>
     <string name="symbols_title">Symbols</string>
     <string name="add_symbols_title">Add symbols</string>
+    <string name="chart_parameter_title">Chart parameters</string>
+    <string name="candle_type">Candle Type</string>
+
+    <string name="buy_title">Buy</string>
+    <string name="price_title">Price</string>
+    <string name="sell_title">Sell</string>
+    <string name="candle_notice_title">NOTICE: A maximum of %d candles is displayed.</string>
+
+
+    <string name="candle_chart_menu">Candle Chart</string>
+    <string name="market_depth_menu">Depth Of Market</string>
 
     <string name="state_connecting">\uD83D\uDFE0 Connecting</string>
     <string name="state_connected">\uD83D\uDFE2 Connected</string>
     <string name="state_closed">\uD83D\uDD34 Closed</string>
     <string name="state_other">\uD83D\uDD34 Not connected</string>
-
+    <string-array name="candle_options">
+        <item>Minute</item>
+        <item>Hour</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
 </resources>
