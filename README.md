@@ -34,10 +34,13 @@ maven {
 ```
 2. add information about the required dependencies to the dependencies section of build.gradle
 ```
-implementation ('com.devexperts.qd:dxlink-websocket:3.328') {}
+implementation ('com.devexperts.qd:dxlink-websocket:3.332')
+   
 implementation ('com.devexperts.mdd:auther-api:476') {
     exclude module:"qds-monitoring"
 }
+
+implementation 'xerces:xercesImpl:2.12.1'
 ```
 ## Usage
 ### How to connect to QD endpoint
