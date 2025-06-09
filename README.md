@@ -87,6 +87,7 @@ import com.dxfeed.event.market.Quote
 
 // The experimental property must be enabled.
 System.setProperty("dxfeed.experimental.dxlink.enable", "true")
+System.setProperty("scheme", "ext:opt:sysprops,opt:dxprops,resource:dxlink.xml")
 val endpoint = DXEndpoint.newBuilder().build()
 val subscription = endpoint.feed.createSubscription(Quote::class.java)
 subscription?.addEventListener {
