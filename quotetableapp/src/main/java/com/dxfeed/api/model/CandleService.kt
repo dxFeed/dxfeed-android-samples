@@ -20,7 +20,7 @@ class CandleService(address: String, isWebSocket: Boolean) {
         if (isWebSocket) {
             // The experimental property must be enabled.
             System.setProperty("dxfeed.experimental.dxlink.enable", "true")
-            System.setProperty("scheme", "ext:opt:sysprops,resource:dxlink.xml")
+            System.setProperty("scheme", "ext:opt:sysprops,opt:dxprops,resource:dxlink.xml")
         }
         val endpoint = DXEndpoint
             .newBuilder()
