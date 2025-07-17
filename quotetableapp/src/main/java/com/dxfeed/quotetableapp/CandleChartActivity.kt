@@ -124,7 +124,7 @@ class CandleChartActivity : AppCompatActivity(), CandlesData {
                 candleService.connect(title!!, type) { list, isSnapshot ->
 
                     if (isSnapshot) {
-                        localCandles = list.take(maxCount).reversed().toMutableList()
+                        localCandles = list.take(maxCount).asReversed().toMutableList()
                         drawChart(localCandles)
                     } else {
                         updateChart(list)
